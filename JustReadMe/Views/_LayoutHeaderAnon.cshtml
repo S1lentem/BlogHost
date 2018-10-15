@@ -1,0 +1,25 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand">Just Read Me</a>
+        </div>
+        <div class="navbar-header">
+            @Html.Partial("SearchForm");
+        </div>
+        <div class="pull-right">
+            <form class="navbar-form">
+                <a asp-action="Register" asp-controller="Account" class="btn btn-danger">Register</a>
+                <a asp-action="Login" asp-controller="Account" class="btn btn-primary">Login</a>
+            </form>
+        </div>
+    </div>
+</nav>
+<div>
+    @RenderBody();
+    @Html.Partial("Footer")
+</div>
+

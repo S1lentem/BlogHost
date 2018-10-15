@@ -1,0 +1,15 @@
+﻿@{ 
+    if (ViewBag.Authorized)
+    {
+        Layout = "~/Views/_LayoutHeader.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/_LayoutHeaderAnon.cshtml";
+    }
+}
+<div class="container">
+    <h1 class="text-center">
+        Search by tag: @ViewBag.Tag
+    </h1>
+</div>

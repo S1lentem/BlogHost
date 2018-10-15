@@ -1,0 +1,15 @@
+﻿@model IEnumerable<BlogModel>
+@{
+    Layout = "~/Views/_LayoutHeader.cshtml";
+}
+
+<div class="container">
+    <a class="btn btn-block btn-primary" asp-action="CreateBlog" asp-controller="Blog">Create blog</a>
+</div>
+
+@foreach (var blog in Model)
+{
+    <div class="container">
+        <h1>@blog.Title</h1>
+    </div>
+}

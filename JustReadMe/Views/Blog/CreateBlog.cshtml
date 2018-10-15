@@ -1,0 +1,23 @@
+﻿@model JustReadMe.ViewModels.CreateBlogModel
+@{
+    Layout = "~/Views/_LayoutHeader.cshtml";
+}
+
+<div class="container">
+    <h1 class="text-center">Create</h1>
+</div>
+<div class="container">
+    <form method="post">
+        <p>
+            <label asp-for="Title">Title</label>
+            <input type="text" class="form-control" asp-for="Title"/>
+        </p>
+        <p>
+            <label asp-for="Description">Description</label>
+            <textarea class="form-control" rows="5" placeholder="Enter your new post" asp-for="Description"></textarea> 
+       </p> 
+        <p>
+            <button class="btn btn-primary col-md-4">Create</button>
+        </p>
+    </form>
+</div>
