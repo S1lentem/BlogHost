@@ -49,6 +49,7 @@ namespace JustReadMe.Protection
 
         private static bool ByteArraysEqual(byte[] firstArray, byte[] secondArray)
         {
+            if (firstArray == secondArray) return true;
             if (firstArray == null || secondArray == null || firstArray.Length != secondArray.Length) return false;
             for (int i = 0; i < firstArray.Length; i++)
             {

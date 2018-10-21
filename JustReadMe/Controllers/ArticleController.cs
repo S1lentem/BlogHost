@@ -12,15 +12,14 @@ namespace JustReadMe.Controllers
 {
     public class ArticleController : Controller
     {
+        private BloghostContext db;
+
+        public ArticleController(BloghostContext context) => db = context;
+
         [Authorize]
         public IActionResult Index()
         {
-            // Change!!!!!
-
-            ViewBag.Blogs = new List<BlogModel> {
-                new BlogModel() { Title="Title_1"},
-                new BlogModel() { Title="Test_title",}
-            };
+            ViewBag.Blogs = db.Blogs.Where(model => model.UserModel.Email == User.Identity.Name);
             return View();
         }
 

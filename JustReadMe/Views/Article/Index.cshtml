@@ -9,10 +9,13 @@
 <div class="form-group container">
     <label for="Blog">Blog:</label>
     <select name="Blogs">
+        @if (ViewBag.Blogs != null)
+        {
         @foreach (var blog in ViewBag.Blogs)
         {
             <option value="@blog.Title">@blog.Title</option>
         }
+        }1
     </select>
 </div>
 <div class="form-group container">
