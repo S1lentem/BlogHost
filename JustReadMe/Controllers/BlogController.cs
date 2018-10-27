@@ -1,27 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
 using JustReadMe.ViewModels;
 using JustReadMe.Models;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
+using JustReadMe.Interfaces.Repository;
 
 namespace JustReadMe.Controllers
 {
     public class BlogController : Controller
     {
-        private BloghostContext db;
+        private IUserRepository users;
+        private IBlogsRepository blogs;
+        private IArticleRepository articles;
 
-        public BlogController(BloghostContext context) => db = context;
+        public BlogController(IUserRepository users, IBlogsRepository blogs, IArticleRepository articles)
+        {
+            this.users = users;
+            this.blogs = blogs;
+            this.articles = articles;
+        }
 
         [Authorize]
         public IActionResult Index() =>
-            View(db.Blogs.Where(model => model.UserModel.Email == User.Identity.Name));
+            View(blogs.GetAll(model => model.UserModel.Email == User.Identity.Name).Result);
+
 
         [HttpGet]
         [Authorize]
@@ -31,16 +35,14 @@ namespace JustReadMe.Controllers
         [Authorize]
         public async Task<IActionResult> CreateBlog(CreateBlogModel model)
         {
-            UserModel currentUser = await db.Users.FirstAsync(userModel => userModel.Email == User.Identity.Name);
-            db.Blogs.Add(new BlogModel()
+            var currentUser = await users.Find(userModel => userModel.Email == User.Identity.Name);
+            blogs.Add(new BlogModel()
             {
                 Title = model.Title,
                 Description = model.Description,
                 DateCreate = DateTime.Now,
-                UserId = currentUser.Id,
                 UserModel = currentUser
             });
-            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
     }

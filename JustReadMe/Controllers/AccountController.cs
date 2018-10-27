@@ -9,15 +9,24 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using JustReadMe.Models;
 using JustReadMe.ViewModels;
 using JustReadMe.Protection;
+using JustReadMe.Interfaces;
+using JustReadMe.Interfaces.Repository;
+using JustReadMe.Interfaces.Services;
 
 namespace JustReadMe.Controllers
 {
     public class AccountController : Controller
     {
-        private BloghostContext db;
-        private IHashable passwordManager;
+        private IHashable hashManager;
+        private IUserRepository users;
+        private IAuthenticationRegisterService usersManager;
 
-        public AccountController(BloghostContext context) => this.db = context;
+        public AccountController(IUserRepository users, IHashable hashManager, IAuthenticationRegisterService usersManager)
+        {
+            this.users = users;
+            this.hashManager = hashManager;
+            this.usersManager = usersManager;
+        }
 
         [HttpGet]
         public IActionResult Login() => View();
@@ -31,11 +40,9 @@ namespace JustReadMe.Controllers
         {
             if (ModelState.IsValid)
             {
-                passwordManager = new PasswordHashingManager(model.Passwords);
-                UserModel user = await db.Users.FirstOrDefaultAsync(userModel => userModel.Email == model.Email);
-                if (user != null && passwordManager.VerifyPassword(user.Password))
+                if (await usersManager.UserAuthentication(model, this.hashManager))
                 {
-                    await Authnticate(user.Email);
+                    await Authnticate(model.Email);
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Incorect login and (or) passwords");
@@ -49,19 +56,9 @@ namespace JustReadMe.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserModel user = await db.Users.FirstOrDefaultAsync(userModel => userModel.Email == model.Email);
-                if (user == null)
+                if (usersManager.CreateNewUser(model, this.hashManager).Result)
                 {
-                    passwordManager = new PasswordHashingManager(model.Password);
-                    db.Users.Add(new UserModel()
-                    {
-                        Email = model.Email,
-                        Password = passwordManager.GetHash(),
-                        Nickname = model.Nickname
-                    });
-                    await db.SaveChangesAsync();
                     await Authnticate(model.Email);
-
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Incorect login and (or) passwords");
@@ -69,12 +66,8 @@ namespace JustReadMe.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> UserInfo()
-        {
-            UserModel currentUser = await db.Users.FirstOrDefaultAsync(userModel => userModel.Email == User.Identity.Name);
-            return View(currentUser);
-        }
-
+        public async Task<IActionResult> UserInfo() => View(await users.Find(userModel => userModel.Email == User.Identity.Name));
+        
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

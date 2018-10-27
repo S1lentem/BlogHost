@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JustReadMe.Protection
+namespace JustReadMe.Interfaces
 {
-    interface IHashable
+    public interface IHashable
     {
         string GetHash();
         bool VerifyPassword(string haskToCheck);
+        string Password { get; set; }
     }
 }

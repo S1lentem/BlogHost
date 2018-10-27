@@ -1,0 +1,10 @@
+﻿@model JustReadMe.Models.BlogArticleModel;
+@{
+    Layout = "~/Views/_LayoutHeader.cshtml";
+}
+
+<div class="container">
+    <h1 class="text-center">@Model.Tag</h1>
+    <p>@Model.DateCreation</p>
+    <h5>@Model.Message</h5>
+</div>

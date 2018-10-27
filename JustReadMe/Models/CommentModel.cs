@@ -2,15 +2,12 @@
 
 namespace JustReadMe.Models
 {
-    public class CommentModel
+    public class CommentModel : BaseModel
     {
         public string Message { get; set; }
         public DateTime DateCreate { get; }
 
-        public int UserId { get; set; }
-        public UserModel User { get; set; }
-
-        public int ArticleId { get; set; }
-        public BlogArticleModel Article { get; set; }
+        public virtual UserModel User { get; set; }
+        public virtual BlogArticleModel Article { get; set; }
     }
 }

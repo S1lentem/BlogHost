@@ -1,0 +1,32 @@
+﻿@model JustReadMe.ViewModels.ArticleCreateModel
+@{
+    Layout = "~/Views/_LayoutHeader.cshtml";
+}
+
+
+<div class="container">
+    <h1 class="text-center">@ViewBag.blogInfo.Title</h1>
+    <h4 class="text">@ViewBag.blogInfo.Description</h4>
+</div>
+<form method="post">
+    <div class="form-group container">
+        <label for="Tag" asp-for="Tag">Tag: </label>
+        <input type="text" asp-for="Tag" placeholder="Tag for post" />
+    </div>
+    <div class="form-group container">
+        <label asp-for="Message">Post: </label>
+        <textarea asp-for="Message" class="form-control" rows="5" placeholder="Enter your new post"></textarea>
+    </div>
+    <div class="form-group container">
+        <button class="btn btn-primary col-md-4">Post</button>
+    </div>
+</form>
+<div class="container">
+    @if (ViewBag.articles != null)
+    {
+        foreach (var article in ViewBag.articles)
+        {
+            <h3><a asp-action="Show" asp-controller="Article" asp-route-title="@ViewBag.blogInfo.Title" asp-route-tag="@article.Tag">@article.Tag</a></h3>
+        }
+    }
+</div>
