@@ -1,20 +1,15 @@
-﻿    using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
-using JustReadMe.Models;
+using JustReadMe.Interfaces.Repository;
 
 namespace JustReadMe.Controllers
 {
     public class HomeController : Controller
     {
-        private BloghostContext db;
+        private IBlogsRepository blogs;
 
-        public HomeController(BloghostContext context) => db = context;
+        public HomeController(IBlogsRepository blogs) => this.blogs = blogs;
 
         [Authorize]
         public IActionResult Index() => View();

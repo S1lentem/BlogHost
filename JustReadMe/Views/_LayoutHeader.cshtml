@@ -1,6 +1,10 @@
-﻿@{
+﻿@using JustReadMe
+@addTagHelper "*, JustReadMe"
+@{
     Layout = "_Layout";
 }
+
+
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -9,9 +13,9 @@
         </div>
         <div class="navbar-header">
             <ul class="nav navbar-nav">
-                <li class="col-lg-4"><a asp-action="Index" asp-controller="Article">Articles</a></li>
-                <li class="col-lg-4"><a asp-action="Index" asp-controller="Blog">Blogs</a></li>
-                <li class="col-lg-4"><a asp-action="UserInfo" asp-controller="Account">UserInfo</a></li>
+                <menu-component><a asp-action="Index" asp-controller="Article">Articles</a></menu-component>
+                <menu-component><a asp-action="Index" asp-controller="Blog">Blogs</a></menu-component>
+                <menu-component><a asp-action="UserInfo" asp-controller="Account">UserInfo</a></menu-component>
             </ul>
             @Html.Partial("SearchForm")
         </div>

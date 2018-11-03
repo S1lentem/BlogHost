@@ -6,20 +6,35 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
 using JustReadMe.Models;
-
+using JustReadMe.Interfaces.Repository;
 
 namespace JustReadMe.Controllers
 {
     public class ArticleController : Controller
     {
-        private BloghostContext db;
+        private readonly IArticleRepository articles;
+        private readonly IBlogsRepository blogs;
 
-        public ArticleController(BloghostContext context) => db = context;
+        public ArticleController(IArticleRepository articles, IBlogsRepository blogs)
+        {
+            this.articles = articles;
+            this.blogs = blogs;
+        }
 
         [Authorize]
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            ViewBag.Blogs = db.Blogs.Where(model => model.UserModel.Email == User.Identity.Name);
+            ViewBag.blogs = await blogs.GetAll(model => model.UserModel.Email == User.Identity.Name);
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Index((string message, string tag, BlogModel blog) info)
+        {
+            articles.CreatePost((info.message, info.tag), await blogs.Find(model => model.UserModel.Email == User.Identity.Name));
+            ViewBag.blogs = await blogs.GetAll(model => model.UserModel.Email == User.Identity.Name);
             return View();
         }
 

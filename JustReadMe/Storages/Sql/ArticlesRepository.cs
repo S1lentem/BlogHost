@@ -21,6 +21,17 @@ namespace JustReadMe.Storages.Sql
             context.SaveChanges();
         }
 
+        public void CreatePost((string message, string tag) info, BlogModel model)
+        {
+            Add(new BlogArticleModel()
+            {
+                Message = info.message,
+                Tag = info.tag,
+                DateChange = null,
+                BlogModel = model
+            });
+        }
+
         public async Task<BlogArticleModel> Find(Expression<Func<BlogArticleModel, bool>> predicate) 
             => await context.BlogArticles.FirstOrDefaultAsync(predicate);
 
