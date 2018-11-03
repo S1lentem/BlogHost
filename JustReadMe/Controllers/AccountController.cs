@@ -12,6 +12,7 @@ using JustReadMe.Protection;
 using JustReadMe.Interfaces;
 using JustReadMe.Interfaces.Repository;
 using JustReadMe.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JustReadMe.Controllers
 {
@@ -66,6 +67,7 @@ namespace JustReadMe.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> UserInfo() => View(await users.Find(userModel => userModel.Email == User.Identity.Name));
         
         public async Task<IActionResult> Logout()

@@ -10,6 +10,6 @@
 @foreach (var blog in Model)
 {
     <div class="container">
-        <h1>@blog.Title</h1>
+        <h1><a asp-action="ShowBlog" asp-controller="Blog" asp-route-title=@blog.Title>@blog.Title</a></h1>
     </div>
 }

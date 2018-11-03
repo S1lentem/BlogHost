@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 using JustReadMe.Models;
 using JustReadMe.Interfaces.Repository;
+using JustReadMe.ViewModels;
 
 namespace JustReadMe.Controllers
 {
@@ -50,6 +51,28 @@ namespace JustReadMe.Controllers
         }
 
         [HttpGet]
-        public IActionResult PostArticle() => PartialView();   
+        public IActionResult PostArticle() => PartialView();
+
+  
+        [HttpGet]
+        [Authorize]
+        public IActionResult Create(string blog)
+        {
+            ViewBag.blogTitle = blog;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Create(string blog, ArticleCreateModel model)
+        {
+            articles.Add(new BlogArticleModel()
+            {
+                Tag = model.Tag,
+                Message = model.Message,
+                BlogModel = await blogs.Find(blogModel => blogModel.UserModel.Email == User.Identity.Name && blogModel.Title == blog)
+            });
+            return RedirectToAction("ShowBlog", "Blog", new { title = blog });
+        }
     }
 }

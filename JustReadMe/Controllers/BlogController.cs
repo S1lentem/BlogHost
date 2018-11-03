@@ -23,8 +23,8 @@ namespace JustReadMe.Controllers
         }
 
         [Authorize]
-        public IActionResult Index() =>
-            View(blogs.GetAll(model => model.UserModel.Email == User.Identity.Name).Result);
+        public async Task<IActionResult> Index() =>
+            View(await blogs.GetAll(model => model.UserModel.Email == User.Identity.Name));
 
 
         [HttpGet]
@@ -44,6 +44,14 @@ namespace JustReadMe.Controllers
                 UserModel = currentUser
             });
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ShowBlog(string title)
+        {
+            var blogInfo = await blogs.Find(blogModel => blogModel.Title == title && blogModel.UserModel.Email == User.Identity.Name);
+            ViewBag.Posts = await articles.GetAll(articleModel => articleModel.BlogModel == blogInfo);
+            return View(blogInfo);
         }
     }
 }
