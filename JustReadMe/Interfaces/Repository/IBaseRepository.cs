@@ -9,10 +9,6 @@ namespace JustReadMe.Interfaces
     public interface IBaseRepository<T>
         where T : class
     {
-        Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> predicate);
-        Task<T> Find(Expression<Func<T, bool>> predicate);
-        void Add(T item);
-        void Remove(T item);
-        void Update(T item);
+        T GetById(int id);
     }
 }

@@ -18,9 +18,9 @@ namespace JustReadMe.Controllers
 {
     public class AccountController : Controller
     {
-        private IHashable hashManager;
-        private IUserRepository users;
-        private IAuthenticationRegisterService usersManager;
+        private readonly IHashable hashManager;
+        private readonly IUserRepository users;
+        private readonly IAuthenticationRegisterService usersManager;
 
         public AccountController(IUserRepository users, IHashable hashManager, IAuthenticationRegisterService usersManager)
         {
@@ -41,9 +41,9 @@ namespace JustReadMe.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await usersManager.UserAuthentication(model, this.hashManager))
+                if (usersManager.UserAuthentication(model, this.hashManager))
                 {
-                    await Authnticate(model.Email);
+                    await Authnticate(users.GetByEmail(model.Email).Nickname);
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Incorect login and (or) passwords");
@@ -57,9 +57,9 @@ namespace JustReadMe.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (usersManager.CreateNewUser(model, this.hashManager).Result)
+                if (usersManager.CreateNewUser(model, this.hashManager))
                 {
-                    await Authnticate(model.Email);
+                    await Authnticate(model.Nickname);
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Incorect login and (or) passwords");
@@ -68,12 +68,12 @@ namespace JustReadMe.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> UserInfo() => View(await users.Find(userModel => userModel.Email == User.Identity.Name));
-        
+        public IActionResult UserInfo() => View(users.GetByName(User.Identity.Name));
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
 
         private async Task Authnticate(string userName)

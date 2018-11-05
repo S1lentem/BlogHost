@@ -18,31 +18,16 @@ namespace JustReadMe.Storages
 
         public UserRepository(BloghostContext context) => this.context = context;
 
-
         public async void Add(UserModel item)
         {
             await context.Users.AddAsync(item);
             context.SaveChanges();
         }
 
+        public UserModel GetByEmail(string email) => context.Users.FirstOrDefault(model => model.Email == email);
 
-        public async Task<UserModel> Find(Expression<Func<UserModel, bool>> predicate) => await context.Users.FirstOrDefaultAsync(predicate);
+        public UserModel GetById(int id) => context.Users.FirstOrDefault(model => model.Id == id);
 
-
-        public async Task<IEnumerable<UserModel>> GetAll(Expression<Func<UserModel, bool>> predicate) => await Task.Run(() => context.Users.Where(predicate));
-
-
-        public void Remove(UserModel item)
-        {
-            context.Users.Remove(item);
-            context.SaveChanges();
-        }
-
-
-        public void Update(UserModel item)
-        {
-            context.Users.Update(item);
-            context.SaveChanges();
-        }
+        public UserModel GetByName(string name) => context.Users.FirstOrDefault(model => model.Nickname == name);
     }
 }

@@ -7,14 +7,11 @@ namespace JustReadMe.Controllers
 {
     public class HomeController : Controller
     {
-        private IBlogsRepository blogs;
+        private readonly IBlogsRepository blogs;
 
         public HomeController(IBlogsRepository blogs) => this.blogs = blogs;
 
-        [Authorize]
         public IActionResult Index() => View();
-
-        public IActionResult NotLoginIndex() => View();
 
         public IActionResult SearchForm() => PartialView();
 

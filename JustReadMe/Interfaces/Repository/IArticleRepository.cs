@@ -1,14 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿using JustReadMe.DomainModels;
 using JustReadMe.Models;
+using JustReadMe.ViewModels;
+using System.Collections.Generic;
 
 namespace JustReadMe.Interfaces.Repository
 {
-    public interface IArticleRepository : IBaseRepository<BlogArticleModel>
+    public interface IArticleRepository : IBaseRepository<Post>
     {
-        void CreatePost((string message, string tag) info, BlogModel model);
+        void CreatePostAsync(string blog, string userName, ArticleCreateModel model);
+
+        IEnumerable<Post> GetPostsByBlogId(int id);
+
+        IEnumerable<Post> GetAllByUserName(string userName);
+
+        IEnumerable<Post> GetAllByTag(string tag);
     }
 }

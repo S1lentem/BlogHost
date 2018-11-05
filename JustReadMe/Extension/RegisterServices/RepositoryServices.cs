@@ -11,6 +11,10 @@ namespace JustReadMe.Extension.RegisterServices
 
         public static void AddSqlBlogRepository(this IServiceCollection services) => services.AddScoped<IBlogsRepository, BlogsRepository>();
 
-        public static void AddSqlArticleRepository(this IServiceCollection services) => services.AddScoped<IArticleRepository, ArticleRepository>();        
+        public static void AddSqlArticleRepository(this IServiceCollection services) 
+            => services.AddScoped<IArticleRepository, ArticleRepository>();
+
+        public static void AddSqlCommentsRepository(this IServiceCollection services)
+            => services.AddScoped<ICommentRepository, CommentRepository>();
     }
 }

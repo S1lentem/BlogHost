@@ -1,35 +1,12 @@
-﻿@model (string message, string tag, BlogModel blog);
+﻿@model IEnumerable<JustReadMe.DomainModels.Post>
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
-
-<form method="post">
-    <div class="form-group container" >
-        <label asp-for="tag">Tag:</label>
-        <input asp-for="tag" type="text" placeholder="Field for tag" /> 
-    </div>
-    <div class="form-group container">
-        <label asp-for="message">Post:</label>
-        <textarea asp-for="message" class="form-control" rows="5" placeholder="Enter your new post"></textarea>
-    </div>
-    <div class="form-group container">
-        <label>Blog:</label>
-        <select asp-for="blog" name="Blogs">
-            @if (ViewBag.blogs != null)
-            {
-                @foreach (var blog in ViewBag.blogs)
-                {
-                    <option value="@blog.Title">@blog.Title</option>
-                }
-            }
-        </select>
-    </div>
-    <div class="form-group container">
-        <button class="btn btn-primary col-md-4" type="submit">Post</button>
-    </div>
-</form>
 <div class="container">
+    @foreach (var post in Model)
+    {
     <h1>
-        place for your articles
+        <a asp-action="Show" asp-controller="Article" asp-route-id=@post.Id>@post.Tag</a>
     </h1>
+    }
 </div>

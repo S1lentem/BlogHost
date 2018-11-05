@@ -37,11 +37,13 @@ namespace JustReadMe
             services.AddSqlUserRepository();
             services.AddSqlBlogRepository();
             services.AddSqlArticleRepository();
+            services.AddSqlCommentsRepository();
+
             services.AddPasswordHash();
             services.AddAuthRegisterService();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => options.LoginPath = new PathString("/Home/NotLoginIndex"));
+                .AddCookie(options => options.LoginPath = new PathString("/Home/Index"));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

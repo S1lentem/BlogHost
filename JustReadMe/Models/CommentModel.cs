@@ -7,9 +7,9 @@ namespace JustReadMe.Models
         public int Id { get; set; }
 
         public string Message { get; set; }
-        public DateTime DateCreate { get; }
+        public DateTime DateCreate { get; set; }
 
         public virtual UserModel User { get; set; }
-        public virtual BlogArticleModel Article { get; set; }
+        public virtual PostModel Article { get; set; }
     }
 }

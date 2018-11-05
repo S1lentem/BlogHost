@@ -1,5 +1,8 @@
-﻿using JustReadMe.Interfaces.Repository;
+﻿using JustReadMe.DomainModels;
+using JustReadMe.Interfaces;
+using JustReadMe.Interfaces.Repository;
 using JustReadMe.Models;
+using JustReadMe.Services.Map.Sql;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,31 +14,37 @@ namespace JustReadMe.Storages.Sql
 {
     public class BlogsRepository : IBlogsRepository
     {
-        private BloghostContext context;
+        private readonly BloghostContext context;
+        private readonly BlogSqlMapper mapper = new BlogSqlMapper();
+        private readonly IUserRepository users;
 
-        public BlogsRepository(BloghostContext context) => this.context = context;
-
-        public async void Add(BlogModel item)
+        public BlogsRepository(BloghostContext context, IUserRepository users)
         {
-            await context.Blogs.AddAsync(item);
+            this.context = context;
+            this.users = users;
+        }
+
+        public void AddBlog(string title, string description, string userName)
+        {
+            context.Blogs.Add(new BlogModel()
+            {
+                Title = title,
+                Description = description,
+                DateCreate = DateTime.Now,
+                UserModel = users.GetByName(userName)
+            });
             context.SaveChanges();
         }
 
-        public async Task<BlogModel> Find(Expression<Func<BlogModel, bool>> predicate) => await context.Blogs.FirstOrDefaultAsync(predicate);
+        public Blog GetBlogByUserNameAndTitle(string userName, string title) =>
+            mapper.GetDomain(context.Blogs.FirstOrDefault(model => model.Title == title && model.UserModel.Nickname == userName));
 
-        public async Task<IEnumerable<BlogModel>> GetAll(Expression<Func<BlogModel, bool>> predicate) =>
-            await Task.Run(() => context.Blogs.Where(predicate));
+        public IEnumerable<Blog> GetBlogsByUserName(string userName)
+            => context.Blogs.Where(model => model.UserModel.Nickname == userName).Select(model => mapper.GetDomain(model));
 
-        public void Remove(BlogModel item)
-        {
-            context.Blogs.Remove(item);
-            context.SaveChanges();
-        }
+        public Blog GetById(int id) => mapper.GetDomain(context.Blogs.FirstOrDefault(model => model.Id == id));
 
-        public void Update(BlogModel item)
-        {
-            context.Blogs.Update(item);
-            context.SaveChanges();
-        }
+   
+
     }
 }

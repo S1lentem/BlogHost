@@ -1,59 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
 using JustReadMe.Models;
 using JustReadMe.Interfaces.Repository;
 using JustReadMe.ViewModels;
+using System;
 
 namespace JustReadMe.Controllers
 {
     public class ArticleController : Controller
     {
-        private readonly IArticleRepository articles;
+        private readonly IArticleRepository posts;
         private readonly IBlogsRepository blogs;
+        private readonly ICommentRepository comments;
+        private readonly IUserRepository users;
 
-        public ArticleController(IArticleRepository articles, IBlogsRepository blogs)
+        public ArticleController(IArticleRepository posts, IBlogsRepository blogs, ICommentRepository comments, IUserRepository users)
         {
-            this.articles = articles;
+            this.posts = posts;
             this.blogs = blogs;
+            this.comments = comments;
+            this.users = users;
         }
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            ViewBag.blogs = await blogs.GetAll(model => model.UserModel.Email == User.Identity.Name);
-            return View();
-        }
-
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> Index((string message, string tag, BlogModel blog) info)
-        {
-            articles.CreatePost((info.message, info.tag), await blogs.Find(model => model.UserModel.Email == User.Identity.Name));
-            ViewBag.blogs = await blogs.GetAll(model => model.UserModel.Email == User.Identity.Name);
-            return View();
-        }
+        public IActionResult Index() => View(posts.GetAllByUserName(User.Identity.Name));
 
         [HttpGet]
         public IActionResult SearchByTag() => View();
 
         [HttpPost]
-        public IActionResult SearchByTag(string tag)
-        {
-            ViewBag.Authorized = User.Identity.IsAuthenticated;
-            ViewBag.Tag = tag;
-            return View();
-        }
+        public IActionResult SearchByTag(string tag) => View(posts.GetAllByTag(tag));
 
         [HttpGet]
         public IActionResult PostArticle() => PartialView();
 
-  
+
         [HttpGet]
         [Authorize]
         public IActionResult Create(string blog)
@@ -64,15 +48,26 @@ namespace JustReadMe.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create(string blog, ArticleCreateModel model)
+        public IActionResult Create(string blog, ArticleCreateModel model)
         {
-            articles.Add(new BlogArticleModel()
-            {
-                Tag = model.Tag,
-                Message = model.Message,
-                BlogModel = await blogs.Find(blogModel => blogModel.UserModel.Email == User.Identity.Name && blogModel.Title == blog)
-            });
+            posts.CreatePostAsync(blog, User.Identity.Name, model);
             return RedirectToAction("ShowBlog", "Blog", new { title = blog });
+        }
+
+        [HttpGet]
+        public IActionResult Show(int id)
+        {
+            var post = posts.GetById(id);
+            ViewBag.Comments = comments.GetByPostId(id);
+            return View(post);
+        }
+
+        public IActionResult Show(int id, string message)
+        {
+            comments.SendComment(message, User.Identity.Name, id);
+            var post = posts.GetById(id);
+            ViewBag.Comments = comments.GetByPostId(id);
+            return View(post);
         }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using JustReadMe.ViewModels;
 using JustReadMe.Models;
 using JustReadMe.Interfaces.Repository;
+using JustReadMe.DomainModels;
 
 namespace JustReadMe.Controllers
 {
@@ -23,8 +24,7 @@ namespace JustReadMe.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index() =>
-            View(await blogs.GetAll(model => model.UserModel.Email == User.Identity.Name));
+        public IActionResult Index() => View(blogs.GetBlogsByUserName(User.Identity.Name));
 
 
         [HttpGet]
@@ -33,25 +33,18 @@ namespace JustReadMe.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateBlog(CreateBlogModel model)
+        public IActionResult CreateBlog(CreateBlogModel model)
         {
-            var currentUser = await users.Find(userModel => userModel.Email == User.Identity.Name);
-            blogs.Add(new BlogModel()
-            {
-                Title = model.Title,
-                Description = model.Description,
-                DateCreate = DateTime.Now,
-                UserModel = currentUser
-            });
+            blogs.AddBlog(model.Title, model.Description, User.Identity.Name);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public async Task<IActionResult> ShowBlog(string title)
+        public IActionResult ShowBlog(string title)
         {
-            var blogInfo = await blogs.Find(blogModel => blogModel.Title == title && blogModel.UserModel.Email == User.Identity.Name);
-            ViewBag.Posts = await articles.GetAll(articleModel => articleModel.BlogModel == blogInfo);
-            return View(blogInfo);
+            var blog = blogs.GetBlogByUserNameAndTitle(User.Identity.Name, title);
+            ViewBag.Posts = articles.GetPostsByBlogId(blog.Id);
+            return View(blog);
         }
     }
 }

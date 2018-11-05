@@ -13,9 +13,9 @@ namespace JustReadMe.Services
 
         public AuthenticationRegisterService(IUserRepository users) => this.users = users;
 
-        public async Task<bool> CreateNewUser(RegisterModel model, IHashable hashManager)
-        { 
-            var user = await users.Find(userModel => userModel.Email == model.Email);
+        public bool CreateNewUser(RegisterModel model, IHashable hashManager)
+        {
+            var user = users.GetByEmail(model.Email);
             if (user == null)
             {
                 hashManager.Password = model.Password;
@@ -30,10 +30,10 @@ namespace JustReadMe.Services
             return false;
         }
 
-        public async Task<bool> UserAuthentication(LoginModel model, IHashable hashManager)
+        public bool UserAuthentication(LoginModel model, IHashable hashManager)
         {
             hashManager.Password = model.Passwords;
-            var user = await users.Find(userModel => userModel.Email == model.Email);
+            var user = users.GetByEmail(model.Email);
             return user != null && hashManager.VerifyPassword(user.Password);
         }
     }
