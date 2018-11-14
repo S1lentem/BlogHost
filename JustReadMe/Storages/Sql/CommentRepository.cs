@@ -15,10 +15,10 @@ namespace JustReadMe.Storages.Sql
     {
         private readonly BloghostContext context;
         private readonly IUserRepository users;
-        private readonly IArticleRepository posts;
+        private readonly IPostRepository posts;
         private readonly CommentSqlMapper mapper = new CommentSqlMapper();
 
-        public CommentRepository(BloghostContext context, IUserRepository users, IArticleRepository posts)
+        public CommentRepository(BloghostContext context, IUserRepository users, IPostRepository posts)
         {
             this.context = context;
             this.posts = posts;

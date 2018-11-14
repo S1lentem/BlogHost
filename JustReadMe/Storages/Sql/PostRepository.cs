@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace JustReadMe.Storages.Sql
 {
-    public class ArticleRepository : IArticleRepository
+    public class ArticleRepository : IPostRepository
     {
         private readonly BloghostContext context;
         private readonly PostSqlMapper mapper = new PostSqlMapper();
@@ -36,22 +36,29 @@ namespace JustReadMe.Storages.Sql
         public IEnumerable<Post> GetAllByTag(string tag)
             => context.BlogArticles.Where(model => model.Tag == tag)
             .Include(model => model.BlogModel.UserModel)
-            .Select(model => mapper.GetDomain(model));
+            .Select(model => mapper.GetDomain(model, null));
 
 
         public IEnumerable<Post> GetAllByUserName(string userName)
             => context.BlogArticles.Where(model => model.BlogModel.UserModel.Nickname == userName)
             .Include(model => model.BlogModel.UserModel)
-            .Select(model => mapper.GetDomain(model));
+            .Select(model => mapper.GetDomain(model, null));
 
 
         public Post GetById(int id) 
             => mapper.GetDomain(context.BlogArticles.Include(model => model.BlogModel.UserModel).FirstOrDefault(model => model.Id == id));
 
+        public Post GetPostByIdWithComments(int id)
+        {
+            var commentModels = context.Сomments.Where(model => model.Article.Id == id)
+                .Include(model => model.Article.BlogModel.UserModel).ToList();
+
+            return mapper.GetDomain(commentModels[0].Article, commentModels);
+        }
 
         public IEnumerable<Post> GetPostsByBlogId(int id)
             => context.BlogArticles.Where(model => model.BlogModel.Id == id)
             .Include(model => model.BlogModel.UserModel)
-            .Select(model => mapper.GetDomain(model));
+            .Select(model => mapper.GetDomain(model, null));
     }
 }

@@ -21,6 +21,8 @@ namespace JustReadMe
             host.Run();
         }
 
+        
+
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
     }

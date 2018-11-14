@@ -5,7 +5,7 @@
 <div class="container form-group">
     <h1>Create post for blog: @ViewBag.blogTitle</h1>
 </div>
-<form method="post">
+<form method="post" asp-antiforgery="true">
     <div class="form-group container">
         <label asp-for="Tag">Tag:</label>
         <input asp-for="Tag" type="text" placeholder="Field for tag" />

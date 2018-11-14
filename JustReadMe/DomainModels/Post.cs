@@ -14,8 +14,10 @@ namespace JustReadMe.DomainModels
         public DateTime DateCreation { get; }
         public DateTime? DateChange { get; private set; }
         public string AuthorName { get; }
+        public List<Comment> Comments { get; }
 
-        public Post(int id, string tag, string message, DateTime dateCreation, DateTime? dateChanges, string authorName)
+        public Post(int id, string tag, string message, DateTime dateCreation, 
+            DateTime? dateChanges, string authorName, List<Comment> comments)
         {
             this.Id = id;
             this.tag = tag;
@@ -23,6 +25,7 @@ namespace JustReadMe.DomainModels
             this.DateCreation = dateCreation;
             this.DateChange = dateChanges;
             this.AuthorName = authorName;
+            this.Comments = comments;
         }
 
         public string Tag

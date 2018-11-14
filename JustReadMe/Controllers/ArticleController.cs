@@ -1,22 +1,18 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-
-using JustReadMe.Models;
 using JustReadMe.Interfaces.Repository;
 using JustReadMe.ViewModels;
-using System;
 
 namespace JustReadMe.Controllers
 {
     public class ArticleController : Controller
     {
-        private readonly IArticleRepository posts;
+        private readonly IPostRepository posts;
         private readonly IBlogsRepository blogs;
         private readonly ICommentRepository comments;
         private readonly IUserRepository users;
 
-        public ArticleController(IArticleRepository posts, IBlogsRepository blogs, ICommentRepository comments, IUserRepository users)
+        public ArticleController(IPostRepository posts, IBlogsRepository blogs, ICommentRepository comments, IUserRepository users)
         {
             this.posts = posts;
             this.blogs = blogs;
@@ -55,19 +51,14 @@ namespace JustReadMe.Controllers
         }
 
         [HttpGet]
-        public IActionResult Show(int id)
-        {
-            var post = posts.GetById(id);
-            ViewBag.Comments = comments.GetByPostId(id);
-            return View(post);
-        }
+        public IActionResult Show(int id) => View(posts.GetPostByIdWithComments(id));
+        
 
+        [HttpPost]
         public IActionResult Show(int id, string message)
         {
             comments.SendComment(message, User.Identity.Name, id);
-            var post = posts.GetById(id);
-            ViewBag.Comments = comments.GetByPostId(id);
-            return View(post);
+            return RedirectToAction("Show", new { id });
         }
     }
 }

@@ -14,9 +14,9 @@ namespace JustReadMe.Controllers
     {
         private IUserRepository users;
         private IBlogsRepository blogs;
-        private IArticleRepository articles;
+        private IPostRepository articles;
 
-        public BlogController(IUserRepository users, IBlogsRepository blogs, IArticleRepository articles)
+        public BlogController(IUserRepository users, IBlogsRepository blogs, IPostRepository articles)
         {
             this.users = users;
             this.blogs = blogs;
