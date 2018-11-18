@@ -64,7 +64,7 @@ namespace Web.Controllers
         }
 
         [Authorize]
-        public IActionResult UserInfo() => View(users.GetByName(User.Identity.Name));
+        public IActionResult UserInfo() => View(users.GetFullInfoByName(User.Identity.Name));
 
         public async Task<IActionResult> Logout()
         {

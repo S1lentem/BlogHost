@@ -45,6 +45,7 @@
     <Compile Include="DomainModels\Comment.cs" />
     <Compile Include="DomainModels\Post.cs" />
     <Compile Include="DomainModels\UserInfo.cs" />
+    <Compile Include="DomainModels\UserRole.cs" />
     <Compile Include="Interfaces\IHashable.cs" />
     <Compile Include="Interfaces\Repository\IBaseRepository.cs" />
     <Compile Include="Interfaces\Repository\IBlogsRepository.cs" />
