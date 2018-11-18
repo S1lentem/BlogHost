@@ -1,0 +1,12 @@
+﻿@model IEnumerable<BlogHostCore.DomainModels.Post>
+@{
+    Layout = "~/Views/_LayoutHeader.cshtml";
+}
+<div class="container">
+    @foreach (var post in Model)
+    {
+    <h1>
+        <a asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>@post.Title</a>
+    </h1>
+    }
+</div>

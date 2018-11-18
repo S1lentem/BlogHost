@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using JustReadMe.Interfaces;
-using JustReadMe.Protection;
+using BlogHostCore.Interfaces;
 
-namespace JustReadMe.Extension.RegisterServices
+using SupportLibrary.Protection;
+
+namespace Web.Extension.RegisterServices
 {
     public static class HashService
     {

@@ -1,24 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using BlogHostCore.Interfaces.Repository;
+using Web.ViewModels;
 
-using JustReadMe.ViewModels;
-using JustReadMe.Models;
-using JustReadMe.Interfaces.Repository;
-using JustReadMe.DomainModels;
-
-namespace JustReadMe.Controllers
+namespace Web.Controllers
 {
     public class BlogController : Controller
     {
-        private IUserRepository users;
-        private IBlogsRepository blogs;
-        private IPostRepository articles;
+        private readonly IBlogsRepository blogs;
+        private readonly IPostRepository articles;
 
         public BlogController(IUserRepository users, IBlogsRepository blogs, IPostRepository articles)
         {
-            this.users = users;
             this.blogs = blogs;
             this.articles = articles;
         }
@@ -43,7 +36,7 @@ namespace JustReadMe.Controllers
         public IActionResult ShowBlog(string title)
         {
             var blog = blogs.GetBlogByUserNameAndTitle(User.Identity.Name, title);
-            ViewBag.Posts = articles.GetPostsByBlogId(blog.Id);
+            ViewBag.Posts = articles.GetDescriptionPostsByBlogId(blog.Id);
             return View(blog);
         }
     }

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using JustReadMe.Storages.Sql;
-using JustReadMe.Storages;
-using JustReadMe.Interfaces.Repository;
+using BlogHostCore.Interfaces.Repository;
+using Infrastructure.Storages.Sql;
+using Infrastructure.Storages;
 
-namespace JustReadMe.Extension.RegisterServices
+namespace Web.Extension.RegisterServices
 {
     public static class RepositoryServices
     {
@@ -12,7 +12,7 @@ namespace JustReadMe.Extension.RegisterServices
         public static void AddSqlBlogRepository(this IServiceCollection services) => services.AddScoped<IBlogsRepository, BlogsRepository>();
 
         public static void AddSqlArticleRepository(this IServiceCollection services) 
-            => services.AddScoped<IPostRepository, ArticleRepository>();
+            => services.AddScoped<IPostRepository, PostRepository>();
 
         public static void AddSqlCommentsRepository(this IServiceCollection services)
             => services.AddScoped<ICommentRepository, CommentRepository>();

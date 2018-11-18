@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+﻿using BlogHostCore.Interfaces.Repository;
+using Microsoft.AspNetCore.Mvc;
 
-using JustReadMe.Interfaces.Repository;
-
-namespace JustReadMe.Controllers
+namespace Web.Controllers
 {
     public class HomeController : Controller
     {

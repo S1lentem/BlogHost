@@ -7,8 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
-using JustReadMe.Models;
-using JustReadMe.Extension.RegisterServices;
+using Infrastructure.Models;
+using Web.Extension.RegisterServices;
 
 namespace JustReadMe
 {

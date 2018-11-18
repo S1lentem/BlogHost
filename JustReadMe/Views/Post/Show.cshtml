@@ -1,0 +1,35 @@
+﻿@model BlogHostCore.DomainModels.Post;
+@{
+    Layout = "~/Views/_LayoutHeader.cshtml";
+}
+
+<div class="container">
+    <h1 class="text-center">@Model.Title</h1>
+    <h2 class="text-primary">User: @Model.AuthorName</h2>
+    <p>@Model.DateCreation</p>
+    <h5>@Model.Message</h5>
+</div>
+<div class="container">
+    <form method="post">
+        <div class="form-group container">
+            <label>Comment:</label>
+            <textarea class="form-control" rows="5" name="message"></textarea>
+        </div>
+        <div class="form-group container">
+            <button class="btn btn-primary col-md-4" type="submit">Post</button>
+        </div>
+    </form>
+</div>
+<div class="container">
+    <h1>Comments</h1>
+    @if (Model.Comments != null) { 
+    @foreach (var comment in Model.Comments)
+    {
+        <div class="container">
+            <p>Name: @comment.UserName</p>
+             <h6>@comment.DateCreation</h6>
+            <p>Comment: @comment.Message</p>
+        </div>
+    }
+        }
+</div>

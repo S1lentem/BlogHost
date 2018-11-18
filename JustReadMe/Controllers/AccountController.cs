@@ -1,20 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
-using JustReadMe.Models;
-using JustReadMe.ViewModels;
-using JustReadMe.Protection;
-using JustReadMe.Interfaces;
-using JustReadMe.Interfaces.Repository;
-using JustReadMe.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
+using BlogHostCore.Interfaces.Repository;
+using BlogHostCore.Interfaces;
+using BlogHostCore.Interfaces.Services;
+using Web.ViewModels;
 
-namespace JustReadMe.Controllers
+namespace Web.Controllers
 {
     public class AccountController : Controller
     {
@@ -41,7 +37,7 @@ namespace JustReadMe.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (usersManager.UserAuthentication(model, this.hashManager))
+                if (usersManager.UserAuthentication(model.Email, model.Passwords, this.hashManager))
                 {
                     await Authnticate(users.GetByEmail(model.Email).Nickname);
                     return RedirectToAction("Index", "Home");
@@ -57,7 +53,7 @@ namespace JustReadMe.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (usersManager.CreateNewUser(model, this.hashManager))
+                if (usersManager.CreateNewUser(model.Nickname, model.Email, model.Password, this.hashManager))
                 {
                     await Authnticate(model.Nickname);
                     return RedirectToAction("Index", "Home");

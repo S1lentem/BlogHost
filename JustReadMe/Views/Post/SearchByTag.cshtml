@@ -1,0 +1,19 @@
+﻿@model IEnumerable<BlogHostCore.DomainModels.Post>
+@{ 
+    Layout = "~/Views/_LayoutHeader.cshtml";
+}
+<div class="container">
+    @if (Model != null)
+    {
+    @foreach (var post in Model)
+    {
+        <h3>
+            <a asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>@post.Title</a>
+        </h3>
+    }
+    }
+    else
+    {
+        <h3 class="text-center">Posts not founds</h3>
+    }
+</div>

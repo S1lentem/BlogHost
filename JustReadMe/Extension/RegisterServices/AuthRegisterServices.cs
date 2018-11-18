@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using JustReadMe.Interfaces.Services;
-using JustReadMe.Services;
+using Infrastructure.Services;
+using BlogHostCore.Interfaces.Services;
 
-namespace JustReadMe.Extension.RegisterServices
+namespace Web.Extension.RegisterServices
 {
     public static class AuthRegisterServices
     {

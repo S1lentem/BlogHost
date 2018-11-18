@@ -1,4 +1,4 @@
-﻿@model JustReadMe.DomainModels.Blog
+﻿@model BlogHostCore.DomainModels.Blog
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
@@ -8,7 +8,7 @@
     <h1 class="text-center">@Model.Title</h1>
     <h2 class="text">Date create: @Model.DateCreation</h2>
     <h4 class="text">@Model.Description</h4>
-    <a class="btn btn-primary" asp-action="Create" asp-controller="Article" asp-route-blog=@Model.Title>Add post</a>
+    <a class="btn btn-primary" asp-action="Create" asp-controller="Post" asp-route-blog=@Model.Title>Add post</a>
 </div>
 <div class="container">
     @if (ViewBag.Posts != null)
@@ -16,7 +16,7 @@
         foreach (var post in ViewBag.Posts)
         {
             <h3>
-                <a asp-action="Show" asp-controller="Article" asp-route-id=@post.Id>@post.Tag</a>
+                <a asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>@post.Title</a>
             </h3>
         }
     }

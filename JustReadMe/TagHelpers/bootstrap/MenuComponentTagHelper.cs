@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace JustReadMe.TagHelpers.bootstrap
+namespace Web.TagHelpers.bootstrap
 {
     public class MenuComponentTagHelper : TagHelper
     {
