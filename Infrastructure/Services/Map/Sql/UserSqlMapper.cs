@@ -9,6 +9,7 @@ namespace Infrastructure.Services.Map.Sql
         {
             return new UserInfo()
             {
+                Id = model.Id,
                 Email = model.Email,
                 Nickname = model.Nickname,
                 Password = model.Password

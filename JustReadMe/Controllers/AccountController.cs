@@ -9,6 +9,8 @@ using BlogHostCore.Interfaces.Repository;
 using BlogHostCore.Interfaces;
 using BlogHostCore.Interfaces.Services;
 using Web.ViewModels;
+using BlogHostCore.DomainModels;
+using System;
 
 namespace Web.Controllers
 {
@@ -39,7 +41,7 @@ namespace Web.Controllers
             {
                 if (usersManager.UserAuthentication(model.Email, model.Passwords, this.hashManager))
                 {
-                    await Authnticate(users.GetByEmail(model.Email).Nickname);
+                    await Authnticate(users.GetFullInfoByEmail(model.Email));
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Incorect login and (or) passwords");
@@ -55,7 +57,7 @@ namespace Web.Controllers
             {
                 if (usersManager.CreateNewUser(model.Nickname, model.Email, model.Password, this.hashManager))
                 {
-                    await Authnticate(model.Nickname);
+                    await Authnticate(users.GetFullInfoByName(model.Nickname));
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Incorect login and (or) passwords");
@@ -63,8 +65,29 @@ namespace Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
         [Authorize]
         public IActionResult UserInfo() => View(users.GetFullInfoByName(User.Identity.Name));
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult SetRoleForUser(string userName, string role)
+        {
+            try
+            {
+                users.SetRole(userName, role);
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+            }
+            return RedirectToAction("RolliesControl");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult RolliesControl() => View();
+
 
         public async Task<IActionResult> Logout()
         {
@@ -72,9 +95,14 @@ namespace Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private async Task Authnticate(string userName)
+        private async Task Authnticate(UserInfo user)
         {
-            var claims = new List<Claim> { new Claim(ClaimsIdentity.DefaultNameClaimType, userName) };
+            Console.WriteLine(user.Role.ToString());
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Nickname),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
+            };
             var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }

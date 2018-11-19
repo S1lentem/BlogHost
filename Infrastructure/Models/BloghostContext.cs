@@ -19,13 +19,14 @@ namespace Infrastructure.Models
         {
             string adminRoleName = "Admin";
             string userRoleName = "User";
-            string moderName = "Moder";
+            string moderatorName = "Moder";
 
             RoleModel adminRole = new RoleModel { Id = 1, Name = adminRoleName };
             RoleModel userRole = new RoleModel { Id = 2, Name = userRoleName };
-            RoleModel moderatorRole = new RoleModel { Id = 3, Name = moderName };
+            RoleModel moderatorRole = new RoleModel { Id = 3, Name = moderatorName };
         
             modelBuilder.Entity<RoleModel>().HasData(new RoleModel[] { adminRole, userRole, moderatorRole });
+
             modelBuilder.Entity<PostTagModel>().HasKey(m => new { m.PostId, m.TagId });
             base.OnModelCreating(modelBuilder);
         }

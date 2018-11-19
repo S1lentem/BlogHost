@@ -11,9 +11,9 @@ namespace Infrastructure.Services
 
         public AuthenticationRegisterService(IUserRepository users) => this.users = users;
 
-        public bool CreateNewUser(string nickname, string email, string password, IHashable hashManager)
+        public bool CreateNewUser(string nickname, string email, string password, IHashable hashManager, string role = "User")
         {
-            var user = users.GetByEmail(email);
+            var user = users.GetByName(nickname);
             if (user == null)
             {
                 hashManager.Password = password;
@@ -22,7 +22,7 @@ namespace Infrastructure.Services
                     Email = email,
                     Password = hashManager.GetHash(),
                     Nickname = nickname
-                });
+                }, role);
                 return true;
             }
             return false;

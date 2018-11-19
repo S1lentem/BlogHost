@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 using Infrastructure.Models;
 using Web.Extension.RegisterServices;
+using BlogHostCore.Interfaces.Repository;
+using BlogHostCore.Interfaces.Services;
+using BlogHostCore.Interfaces;
 
 namespace JustReadMe
 {
@@ -49,7 +52,8 @@ namespace JustReadMe
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IUserRepository users,
+            IAuthenticationRegisterService registration, IHashable hashManager)
         {
             if (env.IsDevelopment())
             {
@@ -70,6 +74,8 @@ namespace JustReadMe
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            if (users.GetByName("Admin") == null) registration.CreateNewUser("Admin", "Admin@gmail.com", "Admin", hashManager, "Admin");
         }
     }
 }

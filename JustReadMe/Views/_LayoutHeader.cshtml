@@ -11,16 +11,26 @@
         @if (User.Identity.IsAuthenticated)
         {
             <div class="navbar-header">
-                <ul class="nav navbar-nav">
+                <ui class="nav navbar-nav">
                     <menu-component><a asp-action="Index" asp-controller="Post">Articles</a></menu-component>
                     <menu-component><a asp-action="Index" asp-controller="Blog">Blogs</a></menu-component>
                     <menu-component><a asp-action="UserInfo" asp-controller="Account">UserInfo</a></menu-component>
-                </ul>
+                </ui>
             </div>
         }
         <div class="navbar-header">
-            @Html.Partial("SearchForm")
+            <partial name="SearchForm" />
         </div>
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+        {
+            <div class="navbar-header">
+                <ui class="nav navbar-nav">
+                    <li>
+                        <a asp-action="RolliesControl" asp-controller="Account">Rolies Control</a>
+                    </li>
+                </ui>
+            </div>
+        }
         <div class="pull-right">
             @if (User.Identity.IsAuthenticated)
             {

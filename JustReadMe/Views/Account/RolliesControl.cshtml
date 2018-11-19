@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "~/Views/_LayoutHeader.cshtml";
+}
+@using BlogHostCore.DomainModels
+@inject BlogHostCore.Interfaces.Repository.IUserRepository users
+<div>
+    <h1 class="text-center">User Controll</h1>
+</div>
+
+<div class="container text-center">
+    <form method="post" asp-action="SetRoleForUser">
+        <div class="validation" asp-validation-summary="ModelOnly" />
+        <label for="userName">User name</label>
+        <input type="text" name="userName" />
+        <label for="role">Role</label>
+        <select name="role">
+            @foreach (var role in Enum.GetNames(typeof(UserRole)))
+            {
+                <option>@role</option>
+            }
+        </select>
+        <input type="submit" class="btn btn-primary" value="Set Role" />
+    </form>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Nickname</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userInfo in users.GetFullInfoForAllUsers().Select((model, index) => new { model, index }))
+        {
+            <tr>
+                <th>@(userInfo.index + 1)</th>
+                <td>@userInfo.model.Id</td>
+                <td>@userInfo.model.Nickname</td>
+                <td>@userInfo.model.Role</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -2,7 +2,17 @@
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
-
+@if (User.IsInRole("Admin") || User.IsInRole("Moder") || User.Identity.Name == Model.AuthorName)
+{
+    <div class="container">
+        <div class="container col-sm-4">
+            <a class="btn btn-primary btn-block">Edit</a>
+        </div>
+        <div class="cont col-sm-4">
+            <a class="btn btn-warning btn-block">Remove</a>
+        </div>
+    </div>
+}
 <div class="container">
     <h1 class="text-center">@Model.Title</h1>
     <h2 class="text-primary">User: @Model.AuthorName</h2>
@@ -22,14 +32,15 @@
 </div>
 <div class="container">
     <h1>Comments</h1>
-    @if (Model.Comments != null) { 
-    @foreach (var comment in Model.Comments)
+    @if (Model.Comments != null)
     {
-        <div class="container">
-            <p>Name: @comment.UserName</p>
-             <h6>@comment.DateCreation</h6>
-            <p>Comment: @comment.Message</p>
-        </div>
-    }
+        @foreach (var comment in Model.Comments)
+        {
+            <div class="container">
+                <p>Name: @comment.UserName</p>
+                <h6>@comment.DateCreation</h6>
+                <p>Comment: @comment.Message</p>
+            </div>
         }
+    }
 </div>
