@@ -12,7 +12,7 @@
         {
             <div class="navbar-header">
                 <ui class="nav navbar-nav">
-                    <menu-component><a asp-action="Index" asp-controller="Post">Articles</a></menu-component>
+                    <menu-component><a asp-action="Index" asp-controller="Post">Posts</a></menu-component>
                     <menu-component><a asp-action="Index" asp-controller="Blog">Blogs</a></menu-component>
                     <menu-component><a asp-action="UserInfo" asp-controller="Account">UserInfo</a></menu-component>
                 </ui>
@@ -50,6 +50,8 @@
 </nav>
 <div>
     @RenderBody()
-    @Html.Partial("Footer")
+    
+    
+    <!-- Html.Partial("Footer") -->
 </div>                 
 

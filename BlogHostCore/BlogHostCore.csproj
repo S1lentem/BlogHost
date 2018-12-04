@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Http.Features">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.http.features\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,6 +47,10 @@
     <Compile Include="DomainModels\Blog.cs" />
     <Compile Include="DomainModels\Comment.cs" />
     <Compile Include="DomainModels\Post.cs" />
+    <Compile Include="DomainModels\PostElements\PostElement.cs" />
+    <Compile Include="DomainModels\PostElements\ImageElement.cs" />
+    <Compile Include="DomainModels\PostElements\PostElementFactory.cs" />
+    <Compile Include="DomainModels\PostElements\TextElement.cs" />
     <Compile Include="DomainModels\UserInfo.cs" />
     <Compile Include="DomainModels\UserRole.cs" />
     <Compile Include="Interfaces\IHashable.cs" />

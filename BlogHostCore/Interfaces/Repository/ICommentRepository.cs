@@ -8,5 +8,7 @@ namespace BlogHostCore.Interfaces.Repository
         void SendComment(string comment, string userName, int postId);
 
         IEnumerable<Comment> GetByPostId(int postId);
+
+        void RemoveById(int id);
     }
 }

@@ -9,5 +9,7 @@ namespace Web.ViewModels
 
         [Required(ErrorMessage = "Tag is missing")]
         public string Title { get; set; }
+
+        public string Tags { get; set; }
     }
 }

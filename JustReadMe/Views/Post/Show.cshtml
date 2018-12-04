@@ -2,45 +2,77 @@
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
-@if (User.IsInRole("Admin") || User.IsInRole("Moder") || User.Identity.Name == Model.AuthorName)
+@using SupportLibrary.Extension;
+@using BlogHostCore.DomainModels.PostElements;
+@if (AccessExtension.CheckRole(User.IsInRole, "Admin", "Moder") || User.Identity.Name == Model.AuthorName)
 {
+<form method="post">
     <div class="container">
         <div class="container col-sm-4">
             <a class="btn btn-primary btn-block">Edit</a>
         </div>
         <div class="cont col-sm-4">
-            <a class="btn btn-warning btn-block">Remove</a>
+            <a class="btn btn-warning btn-block" asp-action="RemovePost" asp-route-id=@Model.Id>Remove</a>
         </div>
     </div>
+</form>
 }
 <div class="container">
     <h1 class="text-center">@Model.Title</h1>
     <h2 class="text-primary">User: @Model.AuthorName</h2>
     <p>@Model.DateCreation</p>
-    <h5>@Model.Message</h5>
+        @foreach (var tag in Model.Tags)
+        {
+            <a class="badge bg-success alert-info" asp-action="SearchByTag" asp-route-tag=@tag>@tag</a>
+        }
+    @foreach(var element in Model.Elements)
+    {
+        if(element is TextElement text)
+        {
+            <h1>@text.GetContentInfo()</h1>
+        }
+        if (element is ImageElement image)
+        {
+            <img src="@image.GetContentInfo()"/>
+        }
+    }
 </div>
+@if (User.Identity.IsAuthenticated)
+{
 <div class="container">
-    <form method="post">
+    <form method="post" asp-controller="Post" asp-action="SendComment">
         <div class="form-group container">
             <label>Comment:</label>
             <textarea class="form-control" rows="5" name="message"></textarea>
+            <input type="hidden" name="id" value=@Model.Id />
         </div>
         <div class="form-group container">
             <button class="btn btn-primary col-md-4" type="submit">Post</button>
         </div>
     </form>
 </div>
+}
+
 <div class="container">
     <h1>Comments</h1>
     @if (Model.Comments != null)
     {
+    <div class="container">
         @foreach (var comment in Model.Comments)
         {
-            <div class="container">
-                <p>Name: @comment.UserName</p>
-                <h6>@comment.DateCreation</h6>
-                <p>Comment: @comment.Message</p>
+
+            <div class="container form-group-sm">
+                <p>Name: @comment.UserName Date: @comment.DateCreation</p>
+                <p>@comment.Message</p>
+                <div class="col-lg-2">
+                    @if (User.Identity.Name == comment.UserName || AccessExtension.CheckRole(User.IsInRole, "Admin", "Moder"))
+                    {
+                        <a class="btn btn-warning btn-sm">Edit</a>
+                        <a class="btn btn-danger btn-sm" asp-action="RemoveComment" asp-route-id=@comment.Id asp-route-postId=@Model.Id>Remove</a>
+                    }
+                </div>
             </div>
         }
+    </div>
     }
 </div>

@@ -22,25 +22,26 @@
         <input type="submit" class="btn btn-primary" value="Set Role" />
     </form>
 </div>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>ID</th>
-            <th>Nickname</th>
-            <th>Role</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var userInfo in users.GetFullInfoForAllUsers().Select((model, index) => new { model, index }))
-        {
+<div class="container">
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <th>@(userInfo.index + 1)</th>
-                <td>@userInfo.model.Id</td>
-                <td>@userInfo.model.Nickname</td>
-                <td>@userInfo.model.Role</td>
+                <th>#</th>
+                <th>ID</th>
+                <th>Nickname</th>
+                <th>Role</th>
             </tr>
-        }
-    </tbody>
-</table>
-
+        </thead>
+        <tbody>
+            @foreach (var userInfo in users.GetFullInfoForAllUsers().Select((model, index) => new { model, index }))
+            {
+                <tr>
+                    <th>@(userInfo.index + 1)</th>
+                    <td>@userInfo.model.Id</td>
+                    <td>@userInfo.model.Nickname</td>
+                    <td>@userInfo.model.Role</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

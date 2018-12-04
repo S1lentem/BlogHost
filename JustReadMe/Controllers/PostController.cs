@@ -2,6 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using BlogHostCore.Interfaces.Repository;
 using Web.ViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Infrastructure.Storages.FileSys;
 
 namespace Web.Controllers
 {
@@ -11,9 +16,13 @@ namespace Web.Controllers
         private readonly IBlogsRepository blogs;
         private readonly ICommentRepository comments;
         private readonly IUserRepository users;
+        private readonly IHostingEnvironment appEnvironment;
 
-        public PostController(IPostRepository posts, IBlogsRepository blogs, ICommentRepository comments, IUserRepository users)
+        public PostController(IPostRepository posts, IBlogsRepository blogs, ICommentRepository comments, IUserRepository users,
+            IHostingEnvironment appEnvironment)
         {
+            this.appEnvironment = appEnvironment;
+
             this.posts = posts;
             this.blogs = blogs;
             this.comments = comments;
@@ -35,7 +44,7 @@ namespace Web.Controllers
 
 
         [HttpGet]
-        [Authorize]
+        [Authorize] 
         public IActionResult Create(string blog)
         {
             ViewBag.blogTitle = blog;
@@ -43,10 +52,14 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public IActionResult Create(string blog, PostCreateModel model)
+        public async Task<IActionResult> Create(string blog, string[] texts, List<IFormFile> files, string[] order, PostCreateModel model)
         {
-            posts.CreatePostAsync(blog, User.Identity.Name, model.Title, model.Message);
+            var fileManager = new PostImageManager();
+            if (await fileManager.SaveImages(files, User.Identity.Name, blog, model.Title))
+            {
+                posts.Add(model.Title, User.Identity.Name, blog, model.Tags.Split(','), texts, files, order);
+            }
+                     
             return RedirectToAction("ShowBlog", "Blog", new { title = blog });
         }
 
@@ -55,10 +68,31 @@ namespace Web.Controllers
         
 
         [HttpPost]
-        public IActionResult Show(int id, string message)
+        [Authorize]
+        public IActionResult SendComment(int id, string message)
         {
             comments.SendComment(message, User.Identity.Name, id);
             return RedirectToAction("Show", new { id });
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult PostTamplate() => View();
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult RemoveComment(int id, int postId)
+        {
+            comments.RemoveById(id);
+            return RedirectToAction("Show", new { id = postId });
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult RemovePost(int id)
+        {
+            posts.RemoveById(id);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

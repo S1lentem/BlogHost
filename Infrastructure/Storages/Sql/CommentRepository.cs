@@ -48,5 +48,15 @@ namespace Infrastructure.Storages.Sql
             });
             context.SaveChanges();
         }
+
+        public void RemoveById(int id)
+        {
+            var comment = context.Сomments.FirstOrDefault(model => model.Id == id);
+            if (comment != null)
+            {
+                context.Сomments.Remove(comment);
+                context.SaveChanges();
+            }
+        }
     }
 }

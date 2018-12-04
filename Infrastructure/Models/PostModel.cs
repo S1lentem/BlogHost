@@ -7,7 +7,6 @@ namespace Infrastructure.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Message { get; set; }
         public DateTime DateCreation { get; set; }
         public DateTime? DateChange { get; set; }
 

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Infrastructure.Models.PostComponents;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Infrastructure.Models
 {
@@ -10,6 +12,10 @@ namespace Infrastructure.Models
         public DbSet<CommentModel> Сomments { get; set; }
         public DbSet<TagModel> Tags { get; set; }
         public DbSet<RoleModel> Roles { get; set; }
+
+        public DbSet<TextComponent> TextComponents { get; set; }
+        public DbSet<ImageComponent> ImageComponents { get; set; }
+
 
         public BloghostContext(DbContextOptions<BloghostContext> options) : base(options)
         {
@@ -28,6 +34,7 @@ namespace Infrastructure.Models
             modelBuilder.Entity<RoleModel>().HasData(new RoleModel[] { adminRole, userRole, moderatorRole });
 
             modelBuilder.Entity<PostTagModel>().HasKey(m => new { m.PostId, m.TagId });
+
             base.OnModelCreating(modelBuilder);
         }
     }
