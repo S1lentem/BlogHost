@@ -28,13 +28,16 @@ namespace Web.Controllers
         }
 
         [HttpGet]
+        [Route("authorization")]
         public IActionResult Login() => View();
 
         [HttpGet]
+        [Route("registration")]
         public IActionResult Register() => View();
 
         [HttpPost]
-        [ValidateAntiForgeryToken]  
+        [ValidateAntiForgeryToken]
+        [Route("authorization")]
         public async Task<IActionResult> Login(LoginModel model)
         {
             if (ModelState.IsValid)
@@ -67,6 +70,7 @@ namespace Web.Controllers
 
         [HttpGet]
         [Authorize]
+        [Route("user_info")]
         public IActionResult UserInfo() => View(users.GetFullInfoByName(User.Identity.Name));
 
         [HttpPost]
@@ -86,6 +90,7 @@ namespace Web.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
+        [Route("role_manager")]
         public IActionResult RolliesControl() => View();
 
 

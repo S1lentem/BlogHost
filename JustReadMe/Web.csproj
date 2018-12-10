@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <Folder Include="ViewComponents\" />
-    <Folder Include="wwwroot\Files\" />
+    <Folder Include="wwwroot\files\" />
   </ItemGroup>
 
   <ItemGroup>

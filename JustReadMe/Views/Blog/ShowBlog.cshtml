@@ -15,9 +15,7 @@
     {
         foreach (var post in ViewBag.Posts)
         {
-            <h3>
-                <a asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>@post.Title</a>
-            </h3>
-        }
+                <h2><a asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>@post.Title</a></h2>
+    }
     }
 </div>

@@ -8,7 +8,8 @@ namespace Infrastructure.Storages.FileSys
 {
     public class PostImageManager
     {
-        private readonly string root = "Files";
+        private readonly string root = "wwwroot";
+        private readonly string container = "files";
 
         public async Task<bool> SaveImage(IFormFile file, string userName, string blogName, string postName)
         {
@@ -16,7 +17,7 @@ namespace Infrastructure.Storages.FileSys
             {
                 return false;
             }
-            string pathForPost = Path.Combine(root, userName, blogName, postName);
+            string pathForPost = Path.Combine(root, container, userName, blogName, postName);
             try
             {
                 if (!Directory.Exists(pathForPost))
@@ -50,8 +51,12 @@ namespace Infrastructure.Storages.FileSys
 
         public void RemoveFileForPost(string userName, string blogTitle, string postTitle)
         {
-            string path = Path.Combine(root, blogTitle, postTitle);
-            Directory.Delete(path, true);
+            string path = Path.Combine(root, container, userName, blogTitle, postTitle);
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (DirectoryNotFoundException) { }
         }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Infrastructure.Storages.FileSys;
+using Web.Hubs;
 
 namespace Web.Controllers
 {
@@ -33,11 +34,10 @@ namespace Web.Controllers
         [HttpGet]
         public IActionResult Index() => View(posts.GetDescriptionAllByUserName(User.Identity.Name));
 
+      
         [HttpGet]
-        public IActionResult SearchByTag() => View();
-
-        [HttpPost]
-        public IActionResult SearchByTag(string tag) => View(posts.GetDescriptionAllPostByTag(tag));
+        public IActionResult SearchByTag(string tag) 
+            => tag == null ? View() : View(posts.GetDescriptionAllPostByTag(tag));
 
         [HttpGet]
         public IActionResult PostArticle() => PartialView();
@@ -77,10 +77,6 @@ namespace Web.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult PostTamplate() => View();
-
-        [HttpGet]
-        [Authorize]
         public IActionResult RemoveComment(int id, int postId)
         {
             comments.RemoveById(id);
@@ -91,6 +87,9 @@ namespace Web.Controllers
         [Authorize]
         public IActionResult RemovePost(int id)
         {
+            var post = posts.GetFullPostById(id);
+            new PostImageManager().RemoveFileForPost(post.AuthorName, posts.GetBlogTitleForPostId(id), post.Title);
+
             posts.RemoveById(id);
             return RedirectToAction("Index", "Home");
         }

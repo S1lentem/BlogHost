@@ -12,6 +12,7 @@ using Web.Extension.RegisterServices;
 using BlogHostCore.Interfaces.Repository;
 using BlogHostCore.Interfaces.Services;
 using BlogHostCore.Interfaces;
+using Web.Hubs;
 
 namespace JustReadMe
 {
@@ -36,6 +37,7 @@ namespace JustReadMe
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<BloghostContext>(options => options.UseSqlServer(connection));
+            services.AddSignalR();
 
             services.AddSqlUserRepository();
             services.AddSqlBlogRepository();
@@ -66,7 +68,11 @@ namespace JustReadMe
             }
 
             app.UseStaticFiles();
+            app.UseDefaultFiles();
             app.UseAuthentication();
+            app.UseFileServer();
+
+            app.UseSignalR(route => route.MapHub<NotificationHub>("/notification"));
 
             app.UseMvc(routes =>
             {

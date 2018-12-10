@@ -19,28 +19,6 @@ namespace Infrastructure.Storages.Sql
 
         public PostRepository(BloghostContext context) => this.context = context;
 
-        /*
-        public void CreatePostAsync(string blog, string userName, string title, string message, string[] tags)
-        {
-            var blogInfo = context.Blogs.FirstOrDefault(blogModel => blogModel.UserModel.Nickname == userName && blogModel.Title == blog);
-            var postModel = new PostModel()
-            {
-                Title = title,
-                Message = message,
-                BlogModel = blogInfo,
-                DateCreation = DateTime.Now,
-            };
-            context.Posts.Add(postModel);
-
-            foreach (var tag in tags)
-            {
-                var tagModel = context.Tags.FirstOrDefault(t => t.Title == tag) ?? new TagModel() { Title = tag };
-                context.Add(new PostTagModel() { Post = postModel, Tag = tagModel });
-            }
-            context.SaveChanges();
-        }*/
-
-
         public IEnumerable<Post> GetDescriptionAllPostByTag(string tag)
         {
             var tagInfo = context.Tags
@@ -82,12 +60,15 @@ namespace Infrastructure.Storages.Sql
 
             return commentModels.Count != 0 ? 
                 mapper.GetDomain(commentModels[0].Post, textComponents, imageComponents, commentModels) : GetById(id);
-
-
         }
 
         public IEnumerable<Post> GetDescriptionPostsByBlogId(int id)
             => context.Posts.Where(model => model.BlogModel.Id == id)
+            .Include(model => model.BlogModel.UserModel)
+            .Select(model => mapper.GetDomain(model, null, null, null));
+
+        public IEnumerable<Post> GetDescriptionAllPostContainsInTitle(string partTitle, string userName)
+            => context.Posts.Where(model => model.Title.Contains(partTitle) && model.BlogModel.UserModel.Nickname == userName)
             .Include(model => model.BlogModel.UserModel)
             .Select(model => mapper.GetDomain(model, null, null, null));
 
@@ -136,12 +117,19 @@ namespace Infrastructure.Storages.Sql
                     {
                         OrderNum = i,
                         Post = postModel,
-                        ImagePath = Path.Combine("wwwroot", "Files", userName, blog, title, files[imageIndex++].FileName)
+                        ImagePath = Path.Combine(userName, blog, title, files[imageIndex++].FileName)
                     });
                 }
             }
 
             context.SaveChanges();
         }
+
+        public string GetBlogTitleForPostId(int id)
+            => context.Posts.Include(model => model.BlogModel)
+            .FirstOrDefault(model => model.Id == id).BlogModel.Title;
+
+         
+        
     }
 }

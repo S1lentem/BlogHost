@@ -1,12 +1,49 @@
-﻿@model IEnumerable<BlogHostCore.DomainModels.Post>
+﻿ @model IEnumerable<BlogHostCore.DomainModels.Post>
+
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
-<div class="container">
-    @foreach (var post in Model)
-    {
-    <h1>
-        <a asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>@post.Title</a>
-    </h1>
-    }
-</div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                type: 'GET',
+                url: 'api/search',
+                success: function (posts) {
+                    var container = $('#post_container');
+                    $.each(posts, function (index, post) {
+                        var begin = '<h1><a href="/Post/Show/' + post.id + '">';
+                        var end = '</a></h1>'
+                        container.append(begin + post.title + end);
+                    });
+                }
+            });
+        });
+
+
+        $(document).ready(function () {
+            $('#btn').click(function () {
+                var partTitle = $("#post").val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/Search/' + partTitle,
+                    success: function (posts) {
+                        var container = $('#post_container');
+                        container.empty();
+                        $.each(posts, function (index, post) {
+                            var begin = '<h1><a href="/Post/Show/' + post.id + '">';
+                            var end = '</a></h1>'
+                            container.append(begin + post.title + end);
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <div class="container">
+        <input type="text" id="post" />
+        <button class="btn" id="btn">Click me</button>
+    </div>
+    <ul id="all"></ul>
+    <div class="container" id="post_container">
+    </div>
