@@ -23,7 +23,7 @@
     <div class="container">
         @foreach (var tag in Model.Tags)
         {
-            <a class="badge bg-success alert-info" asp-action="SearchByTag" asp-route-tag=@tag>@tag</a>
+            <a class="badge badge-primary" asp-action="SearchByTag" asp-route-tag=@tag>@tag</a>
         }
         </div>
         @foreach (var element in Model.Elements)

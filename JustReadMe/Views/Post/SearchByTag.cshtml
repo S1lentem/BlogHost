@@ -2,18 +2,25 @@
 @{ 
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
-<div class="container">
-    @if (Model != null)
-    {
-    @foreach (var post in Model)
-    {
-        <h3>
-            <a asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>@post.Title</a>
-        </h3>
-    }
-    }
-    else
-    {
-        <h3 class="text-center">Posts not founds</h3>
-    }
-</div>
+<div class="container mt-5" >
+    <div class="row">
+        @if (Model != null)
+        {
+            @foreach (var post in Model)
+            {
+                <div class="card " style="width: 18rem;">
+                    <div class="card-header">@post.Title</div>
+                    <div class="card-body">
+                        <h5 class="card-text">Username: @post.AuthorName</h5>
+                        <h6 class="card-text">Date creation: @post.DateCreation</h6>
+                        <a class="btn btn-dark" asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>Show</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h3 class="text-center">Posts not founds</h3>
+        }
+        </div>
+    </div>

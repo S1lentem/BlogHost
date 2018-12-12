@@ -5,8 +5,8 @@
 
 
 <div class="container">
-    <h1 class="text-center">@Model.Title</h1>
-    <h2 class="text">Date create: @Model.DateCreation</h2>
+    <h1 class="text-center title">@Model.Title</h1>
+    <h2 class="text title">Date create: @Model.DateCreation</h2>
     <h4 class="text">@Model.Description</h4>
     <a class="btn btn-primary" asp-action="Create" asp-controller="Post" asp-route-blog=@Model.Title>Add post</a>
 </div>
@@ -15,6 +15,14 @@
     {
         foreach (var post in ViewBag.Posts)
         {
+            <div class="card bg-light mb-3">
+                <div class="card-header">@post.Title</div>
+                <div class="card-body">
+                    <h5 class="card-title">Post</h5>
+                    <p class="card-text">@post.DateCreation</p>
+                </div>
+
+            </div>
                 <h2><a asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>@post.Title</a></h2>
     }
     }

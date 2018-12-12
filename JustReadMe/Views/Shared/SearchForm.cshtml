@@ -1,6 +1,6 @@
 ﻿<form class="navbar-form navbar-left" role="search" method="get">
-    <div class="form-group">
-        <input type="text" name="tag" class="form-control" placeholder="Search by tag">
+    <div class="form-inline">
+        <input type="text" name="tag" class="form-control mr-sm-2" placeholder="Search by tag">
+        <button type="submit" class="btn btn-default" asp-controller="Post" asp-action="SearchByTag"><span class="glyphicon glyphicon-search"></span>Search</button>
     </div>
-    <button type="submit" class="btn btn-default" asp-controller="Post" asp-action="SearchByTag"><span class="glyphicon glyphicon-search"></span>Search</button>
 </form>

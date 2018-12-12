@@ -12,8 +12,8 @@ namespace Web.Hubs
         public void Send(string message, string userName, string host)
         {
             {
-                Clients.User()
-                Clients.Client(Context.ConnectionId).SendAsync("Send", $"User {userName} send comment for you post {message}");
+                
+                Clients.User(Context.User.Identity.Name).SendAsync("Send", $"User {userName} send comment for you post {message}");
             }
         }
     }

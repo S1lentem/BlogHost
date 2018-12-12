@@ -3,18 +3,18 @@
     Layout = "_Layout";
 }
 
-<nav class="navbar navbar-default">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Just Read Me</a>
-        </div>
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+
+    <div class="container collapse navbar-collapse">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">Just Read Me</a>
+
         @if (User.Identity.IsAuthenticated)
         {
             <div class="navbar-header">
                 <ui class="nav navbar-nav">
-                    <menu-component><a asp-action="Index" asp-controller="Post">Posts</a></menu-component>
-                    <menu-component><a asp-action="Index" asp-controller="Blog">Blogs</a></menu-component>
-                    <menu-component><a asp-action="UserInfo" asp-controller="Account">UserInfo</a></menu-component>
+                    <menu-component><a class="nav-link" asp-action="Index" asp-controller="Post">Posts</a></menu-component>
+                    <menu-component><a class="nav-link" asp-action="Index" asp-controller="Blog">Blogs</a></menu-component>
+                    <menu-component><a class="nav-link" asp-action="UserInfo" asp-controller="Account">UserInfo</a></menu-component>
                 </ui>
             </div>
         }
@@ -26,7 +26,7 @@
             <div class="navbar-header">
                 <ui class="nav navbar-nav">
                     <li>
-                        <a asp-action="RolliesControl" asp-controller="Account">Rolies Control</a>
+                        <a class="nav-link" asp-action="RolliesControl" asp-controller="Account">Rolies Control</a>
                     </li>
                 </ui>
             </div>
@@ -47,6 +47,7 @@
             }
         </div>
     </div>
+
 </nav>
 <div>
     @RenderBody()
