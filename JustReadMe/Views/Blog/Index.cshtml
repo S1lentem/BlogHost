@@ -2,14 +2,16 @@
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
 
 <div class="container">
     <div class="row">
         <div class="container col-sm-12">
             <div class="card bg-light" style="margin: 2%; ">
-                <div class="card-header"><h2>Create new Blog</h2></div>
+                <div class="card-header"><h2>@Localizer["Create"]</h2></div>
                 <div class="card-body">
-                    <a class="btn btn-block btn-dark font-weight-bold text-uppercase" asp-action="CreateBlog" asp-controller="Blog">Create</a>
+                    <a class="btn btn-block btn-dark font-weight-bold text-uppercase" asp-action="CreateBlog" asp-controller="Blog">@Localizer["CreateButton"]</a>
                 </div>
             </div>
         </div>
@@ -21,14 +23,14 @@
                         <h2>@blog.Title</h2>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">Description</h5>
+                        <h5 class="card-title">@Localizer["Desc"]</h5>
                         <p class="card-text">@blog.Description</p>
-                        <a class="btn btn-dark col-sm-3" asp-action="ShowBlog" asp-controller="Blog" asp-route-title=@blog.Title>Show</a>
-                        <a class="btn btn-warning col-sm-3">Edit</a>
-                        <a class="btn btn-danger col-sm-3 float-lg-right">Remove</a>
+                        <a class="btn btn-dark col-sm-3" asp-action="ShowBlog" asp-controller="Blog" asp-route-title=@blog.Title>@Localizer["ShowBt"]</a>
+                        <a class="btn btn-warning col-sm-3" asp-action="Edit" asp-controller="Blog" asp-route-id=@blog.Id>@Localizer["EditBt"]</a>
+                        <a class="btn btn-danger col-sm-3 float-lg-right" asp-action="RemoveBlogById" asp-controller="Blog" asp-route-id=@blog.Id>@Localizer["RemoveBt"]</a>
                     </div>
                 </div>
             </div>
         }
     </div>
- </div>
+</div>

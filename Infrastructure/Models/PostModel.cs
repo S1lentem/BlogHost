@@ -10,7 +10,9 @@ namespace Infrastructure.Models
         public DateTime DateCreation { get; set; }
         public DateTime? DateChange { get; set; }
 
+        public int BlogModelId { get; set; }
         public virtual BlogModel BlogModel { get; set; }
+
         public virtual ICollection<PostTagModel> PostTag { get; set; }
 
         public PostModel() => PostTag = new LinkedList<PostTagModel>();

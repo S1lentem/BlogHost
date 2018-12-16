@@ -9,6 +9,7 @@ namespace Infrastructure.Models
         public string Description { get; set; }
         public DateTime DateCreate { get; set; }
 
+
         public virtual UserModel UserModel { get; set; }
     }
 }

@@ -1,49 +1,67 @@
-﻿ @model IEnumerable<BlogHostCore.DomainModels.Post>
+﻿@model IEnumerable<BlogHostCore.DomainModels.Post>
 
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
-    <script type="text/javascript">
-        $(document).ready(function () {
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: 'api/search',
+            success: function (posts) {
+                var container = $('#post_container');
+                $.each(posts, function (index, post) {
+                    var content = '<div class="card m-3" style="width: 18rem;">'
+                        + '<div class="card-header"><h5 class="text-center">' + post.title + '</h5></div>'
+                    + '<div class="card-body"> '
+                       + '<a class="btn btn-dark col-3" href="/Post/Show/' + post.id + '">Show</a>'
+
+                    + '</div>'
+               +' </div>'
+                   
+                    container.append(content);
+                });
+            }
+        });
+    });
+
+
+    $(document).ready(function () {
+        $('#btn').click(function () {
+            var partTitle = $("#post").val();
+
             $.ajax({
                 type: 'GET',
-                url: 'api/search',
+                url: '/api/Search/' + partTitle,
                 success: function (posts) {
                     var container = $('#post_container');
+                    container.empty();
                     $.each(posts, function (index, post) {
-                        var begin = '<h1><a href="/Post/Show/' + post.id + '">';
-                        var end = '</a></h1>'
-                        container.append(begin + post.title + end);
+                        var content = '<div class="card m-3" style="width: 18rem;">'
+                            + '<div class="card-header"><h5 class="text-center">' + post.title + '</h5></div>'
+                            + '<div class="card-body"> '
+                            + '<a class="btn btn-dark col-3" href="/Post/Show/' + post.id + '">Show</a>'
+                            + '</div>'
+                            + ' </div>';
+                        container.append(content);
                     });
                 }
             });
         });
+    });
+</script>
+<div class="container">
+    <h1 class="text-center title">Search post's by title</h1>
 
-
-        $(document).ready(function () {
-            $('#btn').click(function () {
-                var partTitle = $("#post").val();
-
-                $.ajax({
-                    type: 'GET',
-                    url: '/api/Search/' + partTitle,
-                    success: function (posts) {
-                        var container = $('#post_container');
-                        container.empty();
-                        $.each(posts, function (index, post) {
-                            var begin = '<h1><a href="/Post/Show/' + post.id + '">';
-                            var end = '</a></h1>'
-                            container.append(begin + post.title + end);
-                        });
-                    }
-                });
-            });
-        });
-    </script>
-    <div class="container">
-        <input type="text" id="post" />
-        <button class="btn" id="btn">Click me</button>
-    </div>
+<div class="container text-center">
+    <input type="text" id="post" class="text" />
+    <button class="btn btn-dark" id="btn">Search</button>
+</div>
+<div class="container row">
     <ul id="all"></ul>
-    <div class="container" id="post_container">
-    </div>
+</div>
+
+<div class="container row" id="post_container">
+
+</div>
+</div>

@@ -54,6 +54,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("registration")]
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)

@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Infrastructure.Storages.FileSys;
-using Web.Hubs;
+
+using System.Linq;
+using BlogHostCore.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace Web.Controllers
 {
@@ -18,16 +21,18 @@ namespace Web.Controllers
         private readonly ICommentRepository comments;
         private readonly IUserRepository users;
         private readonly IHostingEnvironment appEnvironment;
+        private readonly IImageStorable imageStorable;
 
         public PostController(IPostRepository posts, IBlogsRepository blogs, ICommentRepository comments, IUserRepository users,
-            IHostingEnvironment appEnvironment)
+            IHostingEnvironment appEnvironment, IImageStorable imageStorable, IConfiguration configuration)
         {
             this.appEnvironment = appEnvironment;
-
+            this.imageStorable = imageStorable;
             this.posts = posts;
             this.blogs = blogs;
             this.comments = comments;
             this.users = users;
+            this.imageStorable.Root = configuration["ImageRoot"];
         }
 
         [Authorize]
@@ -54,12 +59,9 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(string blog, string[] texts, List<IFormFile> files, string[] order, PostCreateModel model)
         {
-            var fileManager = new PostImageManager();
-            if (await fileManager.SaveImages(files, User.Identity.Name, blog, model.Title))
-            {
-                posts.Add(model.Title, User.Identity.Name, blog, model.Tags.Split(','), texts, files, order);
-            }
-                     
+  
+            var imageNames = await imageStorable.SaveImagesAsync(files);
+            posts.Add(model.Title, User.Identity.Name, blog, model.Tags.Split(','), texts, imageNames.ToArray(), order);
             return RedirectToAction("ShowBlog", "Blog", new { title = blog });
         }
 
@@ -88,8 +90,8 @@ namespace Web.Controllers
         public IActionResult RemovePost(int id)
         {
             var post = posts.GetFullPostById(id);
-            new PostImageManager().RemoveFileForPost(post.AuthorName, posts.GetBlogTitleForPostId(id), post.Title);
-
+            var allImages = posts.GetAllImagesNamesByPostId(id);
+            imageStorable.RemoveFileForPost(allImages.ToArray());
             posts.RemoveById(id);
             return RedirectToAction("Index", "Home");
         }

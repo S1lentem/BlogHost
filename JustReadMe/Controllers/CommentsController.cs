@@ -17,38 +17,24 @@ namespace Web.Controllers
         public CommentsController(ICommentRepository commentRepository)
             => this.commentRepository = commentRepository;
 
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        public IActionResult Get(int id) => new JsonResult(commentRepository.GetByPostId(id));
+        
 
         // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]int id, [FromBody]string message)
-        {
-            commentRepository.SendComment(message, User.Identity.Name, id);
-            int i = 0;
-        }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        public IActionResult Post(int id, string message) 
+            => new JsonResult(commentRepository.SendComment(message, User.Identity.Name, id));
+        
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            
+           // commentRepository.RemoveById(id);
         }
     }
 }

@@ -2,6 +2,8 @@
 @{
     Layout = "_Layout";
 }
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
 
 <nav class="navbar navbar-expand navbar-dark bg-dark">
 
@@ -12,21 +14,26 @@
         {
             <div class="navbar-header">
                 <ui class="nav navbar-nav">
-                    <menu-component><a class="nav-link" asp-action="Index" asp-controller="Post">Posts</a></menu-component>
-                    <menu-component><a class="nav-link" asp-action="Index" asp-controller="Blog">Blogs</a></menu-component>
-                    <menu-component><a class="nav-link" asp-action="UserInfo" asp-controller="Account">UserInfo</a></menu-component>
+                    <menu-component><a class="nav-link" asp-action="Index" asp-controller="Post">@Localizer["PostItem"]</a></menu-component>
+                    <menu-component><a class="nav-link" asp-action="Index" asp-controller="Blog">@Localizer["BlogItem"]</a></menu-component>
+                    <menu-component><a class="nav-link" asp-action="UserInfo" asp-controller="Account">@Localizer["UserItem"]</a></menu-component>
                 </ui>
             </div>
         }
         <div class="navbar-header">
-            <partial name="SearchForm" />
+            <form class="navbar-form navbar-left" role="search" method="get">
+                <div class="form-inline">
+                    <input type="text" name="tag" class="form-control mr-sm-2" placeholder="@Localizer["SearchText"]">
+                    <button type="submit" class="btn btn-default" asp-controller="Post" asp-action="SearchByTag"><span class="glyphicon glyphicon-search"></span>@Localizer["SearchButton"]</button>
+                </div>
+            </form>
         </div>
         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
         {
             <div class="navbar-header">
                 <ui class="nav navbar-nav">
                     <li>
-                        <a class="nav-link" asp-action="RolliesControl" asp-controller="Account">Rolies Control</a>
+                        <a class="nav-link" asp-action="RolliesControl" asp-controller="Account">@Localizer["RoliesItem"]</a>
                     </li>
                 </ui>
             </div>
@@ -35,14 +42,14 @@
             @if (User.Identity.IsAuthenticated)
             {
                 <form class="navbar-form">
-                    <a asp-action="Logout" asp-controller="Account" class="btn btn-danger">Logut</a>
+                    <a asp-action="Logout" asp-controller="Account" class="btn btn-danger">@Localizer["LogoutButton"]</a>
                 </form>
             }
             else
             {
                 <form class="navbar-form">
-                    <a asp-action="Register" asp-controller="Account" class="btn btn-danger">Register</a>
-                    <a asp-action="Login" asp-controller="Account" class="btn btn-primary">Login</a>
+                    <a asp-action="Register" asp-controller="Account" class="btn btn-danger">@Localizer["RegisterButton"]</a>
+                    <a asp-action="Login" asp-controller="Account" class="btn btn-primary">@Localizer["LogInButton"]</a>
                 </form>
             }
         </div>
@@ -51,8 +58,6 @@
 </nav>
 <div>
     @RenderBody()
-    
-    
-    <!-- Html.Partial("Footer") -->
-</div>                 
+
+</div>
 

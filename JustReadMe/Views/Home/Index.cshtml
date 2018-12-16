@@ -1,9 +1,11 @@
 ﻿@{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
 
 <div class="container">
     <h1>
-        Welcome to the bloghost "Just Read Me"
+        @Localizer["Welcome"]   
     </h1>
 </div>

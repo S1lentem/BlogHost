@@ -53,6 +53,9 @@ namespace Infrastructure.Storages.Sql
         {
             var commentModels = context.Сomments.Where(model => model.Post.Id == id)
                 .Include(model => model.Post.BlogModel.UserModel)
+                .Include(model => model.User)
+                .Include(model => model.Post.PostTag)
+                .ThenInclude(model => model.Tag)
                 .ToList();
 
             var textComponents = context.TextComponents.Where(model => model.Post == commentModels[0].Post);
@@ -82,7 +85,7 @@ namespace Infrastructure.Storages.Sql
             }
         }
 
-        public void Add(string title, string userName, string blog, string[] tags, string[] texts, List<IFormFile> files, string[] order)
+        public void Add(string title, string userName, string blog, string[] tags, string[] texts, string[] images, string[] order)
         {
             var blogInfo = context.Blogs.FirstOrDefault(blogModel => blogModel.UserModel.Nickname == userName && blogModel.Title == blog);
             var postModel = new PostModel()
@@ -117,11 +120,10 @@ namespace Infrastructure.Storages.Sql
                     {
                         OrderNum = i,
                         Post = postModel,
-                        ImagePath = Path.Combine(userName, blog, title, files[imageIndex++].FileName)
+                        ImagePath = images[imageIndex++]
                     });
                 }
             }
-
             context.SaveChanges();
         }
 
@@ -129,7 +131,7 @@ namespace Infrastructure.Storages.Sql
             => context.Posts.Include(model => model.BlogModel)
             .FirstOrDefault(model => model.Id == id).BlogModel.Title;
 
-         
-        
+        public IEnumerable<string> GetAllImagesNamesByPostId(int id)
+            => context.ImageComponents.Where(model => model.Post.Id == id).Select(model => model.ImagePath);
     }
 }

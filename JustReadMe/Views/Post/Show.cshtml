@@ -2,75 +2,158 @@
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
+
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
+
 @using SupportLibrary.Extension;
 @using BlogHostCore.DomainModels.PostElements;
 <div class="container">
-    <h1 class="text-center" id="post_title">@Model.Title</h1>
-    <h2 class="text-primary" id="user_host">User: @Model.AuthorName</h2>
-    <div class="container">
-        <p>@Model.DateCreation</p>
-    </div>
-    <div class="container">
-        @if (AccessExtension.CheckRole(User.IsInRole, "Admin", "Moder") || User.Identity.Name == Model.AuthorName)
-        {
-            <form method="post">
-                    <div class="col-sm-4">
-                        <a class="btn btn-warning btn-block" asp-action="RemovePost" asp-route-id=@Model.Id>Remove</a>
-                    </div>
-            </form>
-        }
-    </div>
+    <h1 class="text-center title" id="post_title">@Model.Title</h1>
+    <h2 class="text-dark" id="user_host">@Localizer["Author"]: @Model.AuthorName</h2>
+    <p>@Model.DateCreation</p>
+    <h1 class="text-center">@Localizer["Content"]</h1>
+
     <div class="container">
         @foreach (var tag in Model.Tags)
         {
             <a class="badge badge-primary" asp-action="SearchByTag" asp-route-tag=@tag>@tag</a>
         }
-        </div>
-        @foreach (var element in Model.Elements)
-        {
-            if (element is TextElement text)
-            {
-                <p>@text.GetContentInfo()</p>
-            }
-            if (element is ImageElement image)
-            {
-                <img src="~/files/@image.GetContentInfo().Replace(@"//", @"/")" />
-            }
-        }
     </div>
-<div class="container">
-    @if (User.Identity.IsAuthenticated)
+    @foreach (var element in Model.Elements)
     {
-        <form method="post" asp-controller="Post" asp-action="SendComment">
-            <div class="form-group container">
-                <label>Comment:</label>
-                <textarea class="form-control" rows="5" name="message"></textarea>
-                <input type="hidden" name="id" value=@Model.Id />
-            </div>
-            <div class="form-group container">
-                <button class="btn btn-primary col-md-4" id="send_comments">Post</button>
+        if (element is TextElement text)
+        {
+            <p>@text.GetContentInfo()</p>
+        }
+        if (element is ImageElement image)
+        {
+            <img src="~/files/@image.GetContentInfo().Replace(@"//", @"/")" />
+        }
+    }
+</div>
+<div class="container mt-5">
+    @if (AccessExtension.CheckRole(User.IsInRole, "Admin", "Moder") || User.Identity.Name == Model.AuthorName)
+    {
+        <form method="post">
+            <div class="col-sm-4">
+                <a class="btn btn-danger btn-block" asp-action="RemovePost" asp-route-id=@Model.Id>@Localizer["DelBt"]</a>
             </div>
         </form>
     }
 </div>
 <div class="container">
-    <h1>Comments</h1>
-    @if (Model.Comments != null)
+    @if (User.Identity.IsAuthenticated)
     {
-        <div class="container">
-            @foreach (var comment in Model.Comments)
-            {
-                <div class="container form-group-sm">
-                    <p>Name: @comment.UserName Date: @comment.DateCreation</p>
-                    <p>@comment.Message</p>
-                    <div class="col-lg-2">
-                        @if (User.Identity.Name == comment.UserName || AccessExtension.CheckRole(User.IsInRole, "Admin", "Moder"))
-                        {
-                            <a class="btn btn-danger btn-sm" asp-action="RemoveComment" asp-route-id=@comment.Id asp-route-postId=@Model.Id>Remove</a>
-                        }
-                    </div>
-                </div>
-            }
+
+        <div class="form-group container">
+            <label>@Localizer["Comments"]:</label>
+            <textarea class="form-control col-6" rows="5" name="message" id="comment_message"></textarea>
+            <input type="hidden" name="id" value=@Model.Id />
+        </div>
+        <div class="form-group container">
+            <button class="btn btn-dark col-md-4" id="add">@Localizer["SendBt"]</button>
         </div>
     }
 </div>
+<h1>@Localizer["Comments"]</h1>
+<div class="container" id="@Model.Id">
+    @if (Model.Comments != null)
+    {
+
+        @foreach (var comment in Model.Comments)
+        {
+            <div class="card bg-dark col-6 mt-1">
+                <div class="card-header text-white">@Localizer["ComName"]: @comment.UserName  @Localizer["Date"]: @comment.DateCreation</div>
+                <div class="card-body">
+                    <p class="text-white">@comment.Message</p>
+
+                    @if (User.Identity.Name == comment.UserName || AccessExtension.CheckRole(User.IsInRole, "Admin", "Moder"))
+                    {
+                    <a class="btn btn-danger btn-sm text-white" asp-action="RemoveComment" asp-route-id=@comment.Id asp-route-postId=@Model.Id>@Localizer["RemoveComBt"]</a>
+                    }
+
+                </div>
+            </div>
+        }
+
+
+    }
+</div>
+
+<script type="text/javascript">
+    function loadComment(div_container) {
+        $.ajax({
+            url: "/api/Comments/" + @Model.Id,
+            type: "GET",
+            success: function (data) {
+                var container = $('#' + div_container);
+                container.empty();
+                $.each(data, function (index, post) {
+                    var comId = 'cm' + post.id;
+                    var value = '<div class="card bg-dark col-6 m-2" id="' + comId + '">' +
+                        '<div class="card-header text-white">@Localizer["ComName"]: ' + post.userName + '</div>' +
+                        '<div class="card-body">' +
+                        '<p class="text-white"> ' + post.message + '</p>';
+                    var usernmae = "@User.Identity.Name";
+                    if (post.userName === usernmae || '@User.IsInRole("Admin")' === 'true' || '@User.IsInRole("Moder")' === 'true') {
+                        value += '<a class="btn btn-danger btn-sm text-white" href="/Post/RemoveComment/' + post.id + '?postId=@Model.Id">Remove</a>';
+                    }
+                    value += '</div>' +
+                        '</div>';
+                    container.append(value);
+                });
+            }
+        });
+    }
+
+    function AddComment(postId, message, userName, date) {
+        var container = $('#' + postId);
+        var value = '<div class="card bg-dark col-6 m-2">' +
+            '<div class="card-header text-white">Name: ' + userName + '</div>' +
+            '<div class="card-body">' +
+            '<p class="text-white"> ' + message + '</p>';
+        var username = "@User.Identity.Name";
+        if (userName === username || '@User.IsInRole("Admin")' === 'true' || '@User.IsInRole("Moder")' === 'true') {
+            value += '<a class="btn btn-danger btn-sm text-white" href="/Post/RemoveComment/' + '?postId=@Model.Id">Remove</a>';
+        }
+        value += '</div>' +
+            '</div>';
+        container.append(value);
+    }
+
+    $(document).ready(function () {
+        $("#add").click(function () {
+            var msg = $('#comment_message').val();
+            $.ajax({
+                url: "/api/Comments",
+                type: "POST",
+                data: {
+                    id: @Model.Id,
+                    message: msg
+                }
+            });
+        });
+
+        let hubUrl = 'https://localhost:44395/notification'
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl(hubUrl)
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+        hubConnection.on('Send', function (postId, message, userName, date) {
+            AddComment(postId, message, userName, date)
+        });
+            $('#add').click(function () {
+                var host = $('#user_host').text().split(' ');
+                hubConnection.invoke("Send", $('#comment_message').val(), "@User.Identity.Name", @Model.Id);
+            });
+        hubConnection.start();
+
+        loadComment('@Model.Id');
+    });
+
+
+
+
+
+</script>

@@ -1,62 +1,64 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
+using BlogHostCore.Interfaces;
 
 namespace Infrastructure.Storages.FileSys
 {
-    public class PostImageManager
+    public class PostImageManager : IImageStorable
     {
-        private readonly string root = "wwwroot";
-        private readonly string container = "files";
-
-        public async Task<bool> SaveImage(IFormFile file, string userName, string blogName, string postName)
+        public string Root { get; set; }
+               
+        public async Task<string> SaveImage(IFormFile file)
         {
-            if (file == null)
-            {
-                return false;
-            }
-            string pathForPost = Path.Combine(root, container, userName, blogName, postName);
+            Guid guid = Guid.NewGuid();
+            string uniqName = Convert.ToBase64String(guid.ToByteArray())
+                .Replace("\\", "").Replace("/","").Replace("=", "").Replace("+", "");
+            string fileName = Path.ChangeExtension(uniqName, "jpg");
+            string path = Path.Combine(Root, fileName);
             try
             {
-                if (!Directory.Exists(pathForPost))
-                {
-                    Directory.CreateDirectory(pathForPost);
-                }
-
-                using (var fileStream = new FileStream(Path.Combine(pathForPost, file.FileName), FileMode.Create))
+                using (var fileStream = new FileStream(path, FileMode.Create))
                 {
                     await file.CopyToAsync(fileStream);
                 }
             }
             catch (Exception ex)
             {
-                Directory.Delete(pathForPost, true);
+                File.Delete(path);
                 throw ex;
             }
-            return true;
+            return fileName;
         }
 
-        public async Task<bool> SaveImages(List<IFormFile> files, string userName, string blogName, string postName)
+        public async Task<IEnumerable<string>> SaveImagesAsync(IEnumerable<IFormFile> files)
         {
-            bool result = false;
-            foreach(var file in files)
+            List<string> allFileNames = new List<string>();
+            if (files != null)
             {
-                result = await SaveImage(file, userName, blogName, postName);
-                if (!result) break;
+                foreach (var file in files)
+                {
+                    allFileNames.Add(await SaveImage(file));
+                }
             }
-            return result;
+            return allFileNames;
         }
 
-        public void RemoveFileForPost(string userName, string blogTitle, string postTitle)
+        public void RemoveFileForPost(params string[] imageNames)
         {
-            string path = Path.Combine(root, container, userName, blogTitle, postTitle);
-            try
+            foreach (var imageName in imageNames)
             {
-                Directory.Delete(path, true);
+                string path = Path.Combine(Root, imageName);
+                try
+                {
+                    File.Delete(path);
+                }
+                catch (FileNotFoundException) { }
+                catch (DirectoryNotFoundException) { }
             }
-            catch (DirectoryNotFoundException) { }
         }
     }
 }

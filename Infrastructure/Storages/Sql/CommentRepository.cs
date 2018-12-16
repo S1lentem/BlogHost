@@ -37,16 +37,19 @@ namespace Infrastructure.Storages.Sql
             .ToList();
 
        
-        public void SendComment(string message, string userName, int postId)
+        public Comment SendComment(string message, string userName, int postId)
         {
-            context.Сomments.Add(new CommentModel()
+
+            var comment = new CommentModel()
             {
                 Post = context.Posts.FirstOrDefault(model => model.Id == postId),
                 User = context.Users.FirstOrDefault(model => model.Nickname == userName),
                 Message = message,
                 DateCreate = DateTime.Now
-            });
+            };
+            context.Сomments.Add(comment);
             context.SaveChanges();
+            return mapper.GetDomain(comment);
         }
 
         public void RemoveById(int id)

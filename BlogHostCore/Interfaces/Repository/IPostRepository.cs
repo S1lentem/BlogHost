@@ -6,8 +6,7 @@ namespace BlogHostCore.Interfaces.Repository
 {
     public interface IPostRepository : IBaseRepository<Post>
     {
-        //void CreatePostAsync(string blog, string userName, string title, string message, string[] tags);
-        void Add(string title, string userName, string blog, string[] tags, string[] texts, List<IFormFile> files, string[] order);
+        void Add(string title, string userName, string blog, string[] tags, string[] texts, string[] images, string[] order);
         IEnumerable<Post> GetDescriptionPostsByBlogId(int id);
         Post GetFullPostById(int id);
         IEnumerable<Post> GetDescriptionAllByUserName(string userName);
@@ -15,5 +14,6 @@ namespace BlogHostCore.Interfaces.Repository
         IEnumerable<Post> GetDescriptionAllPostContainsInTitle(string partTitle, string userName);
         void RemoveById(int id);
         string GetBlogTitleForPostId(int id);
+        IEnumerable<string> GetAllImagesNamesByPostId(int id);
     }
 }

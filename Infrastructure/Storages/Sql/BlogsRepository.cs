@@ -32,6 +32,9 @@ namespace Infrastructure.Storages.Sql
             context.SaveChanges();
         }
 
+        public IEnumerable<string> GetAllImagesByBlogId(int id)
+            => context.ImageComponents.Where(model => model.Post.BlogModel.Id == id).Select(model => model.ImagePath);
+
         public Blog GetBlogByUserNameAndTitle(string userName, string title) =>
             mapper.GetDomain(context.Blogs.FirstOrDefault(model => model.Title == title && model.UserModel.Nickname == userName));
 
@@ -40,7 +43,22 @@ namespace Infrastructure.Storages.Sql
 
         public Blog GetById(int id) => mapper.GetDomain(context.Blogs.FirstOrDefault(model => model.Id == id));
 
-   
+        public void RemoveById(int id)
+        {
+            var model = context.Blogs.FirstOrDefault(item => item.Id == id);
+            context.Blogs.Remove(model);
+            context.SaveChanges();
+        }
 
+        public void UpdateBlog(string title, string desc, int id)
+        {
+            var blog = context.Blogs.FirstOrDefault(model => model.Id == id);
+            blog.Title = title;
+            blog.Description = desc;
+            context.Blogs.Update(blog);
+            context.SaveChanges();
+        }
+
+    
     }
 }

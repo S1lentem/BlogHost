@@ -2,28 +2,31 @@
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
-
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
 
 <div class="container">
     <h1 class="text-center title">@Model.Title</h1>
-    <h2 class="text title">Date create: @Model.DateCreation</h2>
+    <h2 class="text title">@Localizer["Data"]: @Model.DateCreation</h2>
     <h4 class="text">@Model.Description</h4>
-    <a class="btn btn-primary" asp-action="Create" asp-controller="Post" asp-route-blog=@Model.Title>Add post</a>
+    <a class="btn btn-dark" asp-action="Create" asp-controller="Post" asp-route-blog=@Model.Title>@Localizer["Add"]</a>
 </div>
 <div class="container">
-    @if (ViewBag.Posts != null)
-    {
-        foreach (var post in ViewBag.Posts)
+    <div class="row">
+        @if (ViewBag.Posts != null)
         {
-            <div class="card bg-light mb-3">
-                <div class="card-header">@post.Title</div>
-                <div class="card-body">
-                    <h5 class="card-title">Post</h5>
-                    <p class="card-text">@post.DateCreation</p>
-                </div>
+            foreach (var post in ViewBag.Posts)
+            {
+                <div class="card bg-light col-3 m-3">
+                    <div class="card-header">@post.Title</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@Localizer["Post"]</h5>
+                        <p class="card-text">@post.DateCreation</p>
+                        <a asp-action="Show" asp-controller="Post" asp-route-id=@post.Id class="btn btn-dark">@Localizer["Show"]</a>
+                    </div>
 
-            </div>
-                <h2><a asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>@post.Title</a></h2>
-    }
-    }
+                </div>
+            }
+        }
+    </div>
 </div>

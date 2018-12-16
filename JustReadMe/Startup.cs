@@ -13,6 +13,8 @@ using BlogHostCore.Interfaces.Repository;
 using BlogHostCore.Interfaces.Services;
 using BlogHostCore.Interfaces;
 using Web.Hubs;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace JustReadMe
 {
@@ -28,6 +30,9 @@ namespace JustReadMe
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -37,7 +42,7 @@ namespace JustReadMe
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<BloghostContext>(options => options.UseSqlServer(connection));
-            services.AddSignalR();
+           
 
             services.AddSqlUserRepository();
             services.AddSqlBlogRepository();
@@ -47,10 +52,13 @@ namespace JustReadMe
             services.AddPasswordHash();
             services.AddAuthRegisterService();
 
+            services.AddFileImageManager();
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => options.LoginPath = new PathString("/Home/Index"));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddViewLocalization();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,8 +80,22 @@ namespace JustReadMe
             app.UseAuthentication();
             app.UseFileServer();
 
+           
             app.UseSignalR(route => route.MapHub<NotificationHub>("/notification"));
 
+            var supportedCulture = new[]
+            {
+                new CultureInfo("en"),
+                new CultureInfo("ru")
+            };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en"),
+                SupportedCultures = supportedCulture,
+                SupportedUICultures = supportedCulture
+            });
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -25,30 +25,11 @@
 
 
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            let hubUrl = 'https://localhost:44395/notification'
-            const hubConnection = new signalR.HubConnectionBuilder()
-                .withUrl(hubUrl)
-                .configureLogging(signalR.LogLevel.Information)
-                .build();
-            hubConnection.on('Send', data => {
-                alert(data);
-            });
-            $('#send_comments').click(function () {
-                var host = $('#user_host').text().split(' ');
-                hubConnection.invoke("Send", $('#post_title').text(), "@User.Identity.Name", host[1]);
-            });
-            hubConnection.start();
-        });
-
-
-
-
-    </script>
+   
 </head>
 
 <body class="bg-secondary">
     @RenderBody()
+-
 </body>
 </html>
