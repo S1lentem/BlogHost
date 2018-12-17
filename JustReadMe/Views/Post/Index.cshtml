@@ -3,6 +3,9 @@
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
+
 <script type="text/javascript">
     $(document).ready(function () {
         $.ajax({
@@ -13,12 +16,12 @@
                 $.each(posts, function (index, post) {
                     var content = '<div class="card m-3" style="width: 18rem;">'
                         + '<div class="card-header"><h5 class="text-center">' + post.title + '</h5></div>'
-                    + '<div class="card-body"> '
-                       + '<a class="btn btn-dark col-3" href="/Post/Show/' + post.id + '">Show</a>'
+                        + '<div class="card-body"> '
+                        + '<a class="btn btn-dark col-3" href="/Post/Show/' + post.id + '">@Localizer["Show"]</a>'
 
-                    + '</div>'
-               +' </div>'
-                   
+                        + '</div>'
+                        + ' </div>'
+
                     container.append(content);
                 });
             }
@@ -51,17 +54,17 @@
     });
 </script>
 <div class="container">
-    <h1 class="text-center title">Search post's by title</h1>
+    <h1 class="text-center title">@Localizer["Title"]</h1>
 
-<div class="container text-center">
-    <input type="text" id="post" class="text" />
-    <button class="btn btn-dark" id="btn">Search</button>
-</div>
-<div class="container row">
-    <ul id="all"></ul>
-</div>
+    <div class="container text-center">
+        <input type="text" id="post" class="text" />
+        <button class="btn btn-dark" id="btn">@Localizer["SearchBt"]</button>
+    </div>
+    <div class="container row">
+        <ul id="all"></ul>
+    </div>
 
-<div class="container row" id="post_container">
+    <div class="container row" id="post_container">
 
-</div>
+    </div>
 </div>

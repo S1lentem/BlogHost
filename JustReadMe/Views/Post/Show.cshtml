@@ -97,7 +97,7 @@
                         '<p class="text-white"> ' + post.message + '</p>';
                     var usernmae = "@User.Identity.Name";
                     if (post.userName === usernmae || '@User.IsInRole("Admin")' === 'true' || '@User.IsInRole("Moder")' === 'true') {
-                        value += '<a class="btn btn-danger btn-sm text-white" href="/Post/RemoveComment/' + post.id + '?postId=@Model.Id">Remove</a>';
+                        value += '<a class="btn btn-danger btn-sm text-white" href="/Post/RemoveComment/' + post.id + '?postId=@Model.Id">@Localizer["RemoveComBt"]</a>';
                     }
                     value += '</div>' +
                         '</div>';

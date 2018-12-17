@@ -1,8 +1,11 @@
 ﻿@model IEnumerable<BlogHostCore.DomainModels.Post>
-@{ 
+@{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
-<div class="container mt-5" >
+
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
+<div class="container mt-5">
     <div class="row">
         @if (Model != null)
         {
@@ -11,16 +14,16 @@
                 <div class="card " style="width: 18rem;">
                     <div class="card-header">@post.Title</div>
                     <div class="card-body">
-                        <h5 class="card-text">Username: @post.AuthorName</h5>
-                        <h6 class="card-text">Date creation: @post.DateCreation</h6>
-                        <a class="btn btn-dark" asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>Show</a>
+                        <h5 class="card-text">@Localizer["Username"]: @post.AuthorName</h5>
+                        <h6 class="card-text">@Localizer["Date"]: @post.DateCreation</h6>
+                        <a class="btn btn-dark" asp-action="Show" asp-controller="Post" asp-route-id=@post.Id>@Localizer["Show"]</a>
                     </div>
                 </div>
             }
         }
         else
         {
-            <h3 class="text-center">Posts not founds</h3>
+                <h3 class="text-center">@Localizer["Not"]</h3>
         }
-        </div>
     </div>
+</div>

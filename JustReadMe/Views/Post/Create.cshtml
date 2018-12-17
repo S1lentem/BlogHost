@@ -2,18 +2,21 @@
 @{
     Layout = "~/Views/_LayoutHeader.cshtml";
 }
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
+
 <div class="container form-group">
-    <h1 class="text-center title">Create post for blog: @ViewBag.blogTitle</h1>
+    <h1 class="text-center title">@Localizer["TitlePage"]: @ViewBag.blogTitle</h1>
 </div>
 <form method="post" asp-antiforgery="true" onsubmit="return false;" enctype="multipart/form-data">
     <div class="container">
-        <div class="row" >
+        <div class="row">
             <div class="col-md-6">
-                <label asp-for="Title" class="font-weight-bold">Title:</label>
-                <input asp-for="Title" type="text" placeholder="Field for title your post" />
+                <label asp-for="Title" class="font-weight-bold">@Localizer["Title"]</label>
+                <input asp-for="Title" type="text"/>
             </div>
             <div class="col-md-6">
-                <label asp-for="Tags">Tags:</label>
+                <label asp-for="Tags">@Localizer["Tag"]</label>
                 <input asp-for="Tags" type="text" data-role="tagsinput" />
             </div>
         </div>
@@ -22,12 +25,12 @@
         </div>
         <div class="form-group text-center">
             <div class="btn-group btn-group-lg">
-                <button id="create_text" class="btn btn-dark col-md-6" type="button">Add text</button>
-                <button id="create_image" class="btn btn-dark col-md-6" type="button">Add image</button>
+                <button id="create_text" class="btn btn-dark" type="button">@Localizer["AddT"]</button>
+                <button id="create_image" class="btn btn-dark" type="button">@Localizer["AddI"]</button>
             </div>
         </div>
         <div class="form-group container">
-            <button class="btn btn-dark  col-md-4" type="button" onclick="this.form.submit()">Post</button>
+            <button class="btn btn-dark  col-md-4" type="button" onclick="this.form.submit()">@Localizer["Create"]</button>
         </div>
     </div>
 </form>

@@ -117,16 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NotFound" xml:space="preserve">
-    <value>Статьи не найденны</value>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
   </data>
-  <data name="Search" xml:space="preserve">
-    <value>Поиск</value>
+  <data name="EnterEmail" xml:space="preserve">
+    <value>Enter email</value>
   </data>
-  <data name="SearchBt" xml:space="preserve">
-    <value>Искать</value>
+  <data name="EnterNickName" xml:space="preserve">
+    <value>Enter nickname</value>
+  </data>
+  <data name="EnterPassword" xml:space="preserve">
+    <value>Enter password</value>
+  </data>
+  <data name="GoToAuth" xml:space="preserve">
+    <value>Go To authorization</value>
+  </data>
+  <data name="LogInButton" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="NickName" xml:space="preserve">
+    <value>Nickname</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="RepeitPassword" xml:space="preserve">
+    <value>Confirm password</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Поиск своих статей по названию</value>
+    <value>Registration To Web-site</value>
   </data>
 </root>
